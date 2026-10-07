@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAVVA Coffee · Specialty coffee, Bir Uthman, Madinah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   ТОКЕНЫ — целиком из design-system.md, ни одного нового значения
+   ================================================================ */
+:root{
+  --paper:#FAF6EC; --paper-2:#F2EADA;
+  --ink:#403D27; --muted:#6B6650; --line:#DFD6C0;
+  /* Олива переведена на оттенок логотипа (круг = #808368) и осветлена.
+     --olive-deep: фон тёмных секций и подвал. --olive: производный, темнее —
+     плитки, места под фото, кнопки, кружки иконок. Значения «средний»; «светлый
+     предел» включается атрибутом html[data-olive=light] (временный показ заказчику). */
+  --olive-deep:#4C4A30; --olive:#3B3A25; --sage:#80826A;
+  --cream:#E8D8B8; --cream-dim:rgba(232,216,184,.80);
+  --line-olive:rgba(232,216,184,.28);   /* линии на оливе: тот же крем, но прозрачнее */
+  --gold:#C9A765;
+  --r-sm:8px; --r-md:14px; --r-pill:999px;
+  --shadow:0 1px 2px rgba(64,61,39,.05), 0 12px 32px rgba(64,61,39,.08);
+  --ease:cubic-bezier(.19,1,.22,1);
+  --fd:"Fraunces",Georgia,serif;
+  --fb:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --fad:"Noto Naskh Arabic",serif;
+  --fab:"IBM Plex Sans Arabic","Segoe UI",sans-serif;
+  --bar:0px;
+  --pad:clamp(20px,5vw,48px);  /* боковые поля: 20 моб / 48 десктоп */
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;padding-block-end:var(--bar);background:var(--paper);color:var(--ink);
+     font-family:var(--fb);font-size:17px;line-height:1.65;
+     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* браузерные поверхности тоже из палитры */
+::selection{background:rgba(201,167,101,.38);color:var(--ink)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:var(--r-sm)}
+html{scrollbar-color:var(--sage) var(--paper-2)}
+html[data-olive=light]{--olive-deep:#5A5B45;--olive:#464736;--cream-dim:rgba(232,216,184,.95)}
+
+/* ================================================================
+   ТИПОГРАФИКА — шкала из раздела 3 дизайн-системы
+   ================================================================ */
+.display,h1,h2,h3{font-family:var(--fd);line-height:.95;letter-spacing:-.02em;margin:0;font-weight:700}
+.display{font-size:clamp(44px,8.2vw,96px)}
+h1{font-size:clamp(36px,6vw,64px)}
+h3{font-size:clamp(20px,2.2vw,24px);font-weight:600}
+.lead{font-size:clamp(17px,1.6vw,20px);line-height:1.6;max-width:46ch;margin:0}
+.small{font-size:14px;color:var(--muted);line-height:1.6}
+.ar-d{font-family:var(--fad);font-weight:700;line-height:1.3;letter-spacing:0;direction:rtl}
+.ar-b{font-family:var(--fab);direction:rtl;line-height:1.8}
+
+/* строка фактов — делим слэшем, не точками (всегда п.12) */
+.facts{display:flex;flex-wrap:wrap;gap:10px;font-size:14px;color:var(--muted);line-height:1.6;margin:0;padding:0;list-style:none}
+.facts li:not(:last-child)::after{content:"/";margin-inline-start:10px;color:var(--line)}
+.on-dark .facts{color:var(--cream-dim)}
+.on-dark .facts li:not(:last-child)::after{color:rgba(232,216,184,.45)}
+.on-photo .facts{color:var(--cream-dim)}
+
+/* ================================================================
+   КОМПОНЕНТЫ — имена как в разделе 6 дизайн-системы
+   ================================================================ */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--fb);font-weight:600;font-size:15px;
+     padding:14px 28px;border-radius:var(--r-pill);border:0;cursor:pointer;text-decoration:none;white-space:nowrap;
+     transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease)}
+.btn svg{transition:transform .2s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+[dir=rtl] .btn:hover svg{transform:translateX(-3px)}
+.btn--primary{background:var(--olive);color:var(--cream)}
+.btn--primary:hover{background:var(--olive-deep)}
+.on-dark .btn--primary,.on-photo .btn--primary{background:var(--cream);color:var(--olive-deep)}
+.on-dark .btn--primary:hover,.on-photo .btn--primary:hover{background:#DCC9A6}
+.btn--secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn--secondary:hover{border-color:var(--olive);color:var(--olive)}
+.on-dark .btn--secondary{color:var(--cream);border-color:rgba(232,216,184,.5)}
+.on-dark .btn--secondary:hover{border-color:var(--gold);color:var(--gold)}
+.on-photo .btn--secondary{color:var(--cream);border-color:rgba(232,216,184,.62)}
+.on-photo .btn--secondary:hover{border-color:var(--cream);color:var(--cream)}
+
+.alink{display:inline-flex;align-items:center;gap:8px;color:inherit;text-decoration:none;font-weight:500;font-size:15px}
+.alink u{text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+.alink:hover u{border-color:currentColor}
+.alink svg{transition:transform .2s var(--ease)}
+.alink:hover svg{transform:translateX(3px)}
+
+.acts{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+/* Шапка */
+.hdr{display:flex;align-items:center;gap:32px;padding:18px var(--pad);width:100%}
+/* подложка шапки поверх фото: .42 из дизайн-системы не держит текст,
+   если под шапкой попадает светлый кусок кадра. Подняли до .86 —
+   получается оливковая лента, как фризовая полоса на самом фасаде. */
+.hdr--photo{position:absolute;inset-block-start:0;inset-inline:0;z-index:4;background:rgba(62,59,36,.86);color:var(--cream)}
+.hdr--paper{border-bottom:1px solid var(--line)}
+.hdr--olive{color:var(--cream)}
+.brand{display:flex;flex-direction:column;line-height:1;text-decoration:none;color:inherit}
+.brand b{font-family:var(--fd);font-weight:700;font-size:24px;letter-spacing:.01em}
+.hdr nav{display:flex;gap:28px;flex:1;font-size:15px;font-weight:500}
+.hdr nav a{color:inherit;text-decoration:none;opacity:.86;transition:opacity .2s}
+.hdr nav a:hover{opacity:1}
+.lang{display:flex;gap:8px;font-size:14px;align-items:center;color:var(--muted)}
+.hdr--photo .lang,.hdr--olive .lang{color:var(--cream-dim)}
+.lang b{font-weight:600;color:var(--ink)}
+.hdr--photo .lang b,.hdr--olive .lang b{color:var(--cream)}
+.lang i{font-style:normal;opacity:.5}
+.lang em{font-family:var(--fab);font-style:normal}
+
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+svg.i--s{width:15px;height:15px;stroke-width:1.92}   /* 1.6px на сетке 18, поэтому при 15px линию утолщаем, чтобы осталась 1.6 */
+
+/* ================================================================
+   ФАСАД, КОТОРЫЙ ЗАГОРАЕТСЯ САМ
+   Два кадра, оба сделаны из одного исходного: `hero-off.webp` — свет
+   выключен, `hero-light.webp` — чистый свет (горящий кадр минус погашенный).
+   Свет не «проявляется», а ДОБАВЛЯЕТСЯ поверх тёмного фасада зонами —
+   поэтому форма свечения настоящая, а не овальное пятно.
+
+   Как сделаны файлы (ffmpeg, из materials/hero/photo_1_...jpg):
+   1) погашенный кадр —
+      -vf "curves=all='0/0 0.22/0.075 0.45/0.135 0.7/0.195 1/0.26',
+           eq=saturation=0.5:gamma=1.02,
+           colorchannelmixer=.94:.03:0:0:.02:.96:0:0:0:.02:.80"
+   2) чистый свет — вычитание, обязательно в RGB, иначе уходит в зелень:
+      -filter_complex "[0:v]format=gbrp[a];[1:v]format=gbrp[b];
+                       [a][b]blend=all_mode=subtract,format=yuvj420p"
+   Порядок: зал → бра → SAVVA → سافا → уличные лампы → общий свет. 2.45 с.
+   ================================================================ */
+.facade{position:relative;overflow:hidden;background:#15140D;container-type:size}
+/* кадр всегда ровно 16:9 — поэтому зоны света совпадают с фотографией
+   точка в точку. Сдвиг кропа зажат так, что край кадра не отходит от края
+   блока ни при каком размере экрана. */
+.frame{position:absolute;top:0;left:0;
+       width:max(100cqw,177.7778cqh);height:max(56.25cqw,100cqh);
+       transform:translate(clamp(calc(100cqw - 100%),calc(50cqw - var(--fx,50%)),0px),
+                           clamp(calc(100cqh - 100%),calc(50cqh - var(--fy,50%)),0px))}
+.fc{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:fill}
+.lay{opacity:0;mix-blend-mode:plus-lighter;transition:opacity 1ms linear}
+
+.lay--room{--m:radial-gradient(ellipse 23% 33% at 27% 57%,#000 46%,transparent 100%),
+                radial-gradient(ellipse 23% 33% at 71% 57%,#000 46%,transparent 100%),
+                radial-gradient(ellipse 46% 8% at 50% 38%,#000 28%,transparent 100%)}
+.lay--bra{--m:radial-gradient(ellipse 8% 15% at 50.2% 56%,#000 22%,transparent 100%)}
+.lay--en{--m:radial-gradient(ellipse 17% 15% at 31.5% 27%,#000 30%,transparent 100%)}
+.lay--ar{--m:radial-gradient(ellipse 14% 14% at 70.5% 27%,#000 30%,transparent 100%)}
+.lay--out{--m:radial-gradient(ellipse 10% 16% at 4% 74%,#000 18%,transparent 100%),
+               radial-gradient(ellipse 10% 16% at 95% 73%,#000 18%,transparent 100%),
+               radial-gradient(ellipse 8% 12% at 78% 69%,#000 18%,transparent 100%)}
+.lay--room,.lay--bra,.lay--en,.lay--ar,.lay--out{
+  mask-image:var(--m);-webkit-mask-image:var(--m);
+  mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat;
+  mask-size:100% 100%;-webkit-mask-size:100% 100%}
+
+/* зажигание */
+.v.on .lay--room{opacity:1;transition:opacity 900ms var(--ease) 100ms}
+.v.on .lay--bra {opacity:1;transition:opacity 550ms var(--ease) 800ms}
+.v.on .lay--en  {opacity:1;transition:opacity 600ms var(--ease) 1150ms}
+.v.on .lay--ar  {opacity:1;transition:opacity 600ms var(--ease) 1550ms}
+.v.on .lay--out {opacity:1;transition:opacity 550ms var(--ease) 1800ms}
+.v.on .lay--amb {opacity:1;transition:opacity 550ms var(--ease) 1900ms}
+
+/* текст первого экрана — один приём появления на весь сайт */
+.ent{opacity:0;transform:translateY(16px)}
+.v.on .ent{opacity:1;transform:none;transition:opacity 600ms var(--ease) var(--d,350ms),transform 600ms var(--ease) var(--d,350ms)}
+
+/* страховка: что бы ни случилось с анимацией, через 3 секунды
+   экран обязан быть виден целиком */
+.v.done .lay{opacity:1!important;transition:none!important}
+.v.done .ent{opacity:1!important;transform:none!important;transition:none!important}
+
+@media (prefers-reduced-motion:reduce){
+  .lay{opacity:1!important;transition:none!important}
+  .ent{opacity:1!important;transform:none!important;transition:none!important}
+  *{scroll-behavior:auto!important}
+}
+/* ================================================================
+   ОБЩЕЕ ДЛЯ ВАРИАНТОВ
+   ================================================================ */
+.v{display:none;min-height:calc(100svh - var(--bar))}
+.v.live{display:block}
+.wrap{max-width:1280px;margin-inline:auto;padding-inline:var(--pad);width:100%}
+.rule{border:0;border-top:1px solid var(--line);margin:0}
+.on-dark .rule{border-color:var(--line-olive)}
+
+/* ---------- 6. ПОЛНЫЙ КАДР ------------------------------------- */
+/* Кадр на всю высоту. Текст — компактным блоком в левом нижнем углу,
+   фасад и обе вывески остаются открытыми. Тень не растянута на пол-экрана,
+   а лежит пятном ровно под блоком: сам кадр она почти не трогает. */
+/* тёмный фон самой секции — чтобы кремовый текст не пропал,
+   если фотография почему-то не загрузится */
+#v6{position:relative;background:var(--olive-deep)}
+#v6 .facade{position:absolute;inset:0;height:100%}
+#v6 .wash{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse 90% 55% at 0% 100%,
+             rgba(26,24,15,.93) 0%,rgba(26,24,15,.88) 45%,rgba(26,24,15,.78) 70%,
+             rgba(26,24,15,.45) 85%,rgba(26,24,15,.15) 95%,transparent 100%)}
+[dir=rtl] #v6 .wash{transform:scaleX(-1)}
+#v6 .stage{position:relative;z-index:3;min-height:calc(100svh - var(--bar));
+           display:flex;align-items:flex-end;padding-block:0 clamp(40px,7svh,80px)}
+#v6 .col{max-width:400px}
+#v6 .over{color:var(--cream);margin-bottom:12px;width:fit-content}
+/* заголовок здесь идёт шагом H2: блок должен сидеть в углу и не лезть
+   на фасад, при 64px он дотягивался до горящего бра в середине кадра */
+#v6 .display{color:var(--cream);width:fit-content;font-size:clamp(28px,3.4vw,42px)}
+#v6 .lead{color:var(--cream-dim);margin-top:16px;font-size:16px;max-width:38ch}
+#v6 .acts{margin-top:24px}
+/* Правка заказчика (6 окт): обе кнопки героя прозрачные, шрифт кремовый, тонкая кремовая обводка.
+   Раньше вторая кнопка была тёмным текстом на тёмной подложке, контраст 1.62:1. */
+#v6 .btn--primary,#v6 .btn--secondary{background:transparent;color:var(--cream);border:1px solid rgba(232,216,184,.62)}
+#v6 .btn--primary{border-color:var(--cream)}
+#v6 .btn--primary:hover,#v6 .btn--secondary:hover{background:rgba(232,216,184,.12);border-color:var(--cream);color:var(--cream)}
+
+
+@media (max-width:980px){
+  .hdr nav{display:none}
+  /* на узком экране текст лежит колонкой снизу — значит и сход должен
+     идти снизу вверх, а не от левого края */
+  #v6 .wash{background:linear-gradient(to top,rgba(26,24,15,.92) 0%,rgba(26,24,15,.88) 26%,
+            rgba(26,24,15,.76) 42%,rgba(26,24,15,.4) 56%,rgba(26,24,15,.1) 68%,transparent 78%)}
+  #v6 .col{max-width:none}
+  /* на телефоне две кнопки в ряд не помещаются и блок растёт в два этажа.
+     Вторая становится Ссылкой-стрелкой — компонент из той же системы */
+  #v6 .btn--secondary{border:0;padding:14px 0}
+  [dir=rtl] #v6 .wash{transform:none}
+  #v6 .lead{max-width:none}
+}
+@media (max-width:620px){
+  .hdr{gap:16px;padding-block:14px}
+}
+
+/* ================================================================
+   ТЕЛО СТРАНИЦЫ — всё новое в этом файле. Каждое значение из
+   design-system.md: отступы 64/112, радиусы 8/14/999, шкала текста.
+   Все правила привязаны к .body, чтобы первый экран не задеть.
+   ================================================================ */
+.body{display:none}
+.body.live{display:block}
+
+.sec{position:relative;padding-block:64px}
+.sec--paper{background:var(--paper)}
+.sec--paper + .sec--paper{padding-block-start:0}   /* один отступ между блоками одного цвета */
+.sec--olive{background:var(--olive-deep);color:var(--cream)}
+.sec--flush{padding-block-start:0}   /* секция начинается с фото во всю ширину */
+@media (min-width:981px){.sec{padding-block:112px}.sec--flush{padding-block-start:0}}
+
+.body h2{font-size:clamp(28px,3.6vw,42px);font-weight:600;text-wrap:balance}
+.body h3{text-wrap:balance}
+.body p{margin:0}
+.body .lead{margin-top:16px}
+.sec--olive .lead{color:var(--cream-dim)}
+.sec--olive h2,.sec--olive h3{color:var(--cream)}
+
+/* Надзаголовок — по дизайн-системе, раздел 3. Ставим редко: только там,
+   где он несёт настоящий факт (время, адрес). Свой класс, а не .over —
+   чтобы не изменить строку на первом экране. */
+.body .kick{font:600 13px/1.4 var(--fb);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 16px}
+.sec--olive .kick{color:var(--cream-dim)}
+@media (max-width:620px){.body .kick{font-size:12px}}
+
+/* ---- Пустое место под фото: размеченная рамка нужной пропорции ---- */
+.slot{aspect-ratio:var(--ar,4/3);width:100%;background:var(--paper-2);border:1px dashed var(--line);
+      border-radius:var(--r-md);display:grid;place-items:center;text-align:center;padding:16px;
+      color:var(--muted);font-size:13px;line-height:1.5}
+.slot b{display:block;font-weight:600;letter-spacing:.04em;margin-bottom:4px}
+.sec--olive .slot{background:var(--olive);border-color:rgba(232,216,184,.4);color:var(--cream)}
+.slot--band{border-radius:0;border-inline:0;padding:0}   /* кадр во всю ширину: отступов внутри нет */
+.slot--round{border-radius:50%;--ar:1/1}
+
+/* ---- Строка меню: название, воздух, тонкая линия, цена ---- */
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 24px;align-items:baseline;
+     padding-block:14px;border-bottom:1px solid var(--line);break-inside:avoid}
+.row .en{display:block;font-weight:500;line-height:1.35}
+.row .ar{display:block;width:fit-content;direction:rtl;font-family:var(--fab);font-size:13px;line-height:1.6;color:var(--muted)}
+.row .pr{font-family:var(--fd);font-weight:600;font-size:clamp(18px,2vw,20px);line-height:1.2;
+         font-variant-numeric:tabular-nums;text-align:end;white-space:nowrap}
+.row .pr small{display:block;font-family:var(--fb);font-weight:400;font-size:13px;color:var(--muted);margin-top:2px}
+.sec--olive .row,.dlg .row{border-color:var(--line-olive)}
+.sec--olive .row .ar,.sec--olive .row .pr small,.dlg .row .ar,.dlg .row .pr small{color:var(--cream-dim)}
+/* крупная строка — для десертов, у которых нет фотографий: держим типографикой */
+.row--big{padding-block:18px}
+.row--big .en{font-family:var(--fd);font-weight:600;font-size:clamp(22px,2.6vw,30px);line-height:1.1;letter-spacing:-.01em}
+.row--big .pr{font-size:clamp(22px,2.6vw,30px)}
+.lists{columns:2;column-gap:clamp(32px,6vw,96px)}
+.lists--1{columns:1}
+@media (max-width:720px){.lists{columns:1}}
+
+.cat-ar{font-family:var(--fad);font-weight:700;font-size:20px;line-height:1.3;direction:rtl;color:var(--muted);margin-top:8px;width:fit-content}
+.sec--olive .cat-ar,.dlg .cat-ar{color:var(--cream-dim)}
+.note{font-size:14px;color:var(--muted);margin-top:24px}
+
+/* ---- Появление при прокрутке: один приём, только на ведущем элементе ---- */
+.js .rv{opacity:0;transform:translateY(16px)}
+.js .rv.in{opacity:1;transform:none;transition:opacity 600ms var(--ease),transform 600ms var(--ease)}
+@media (prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none;transition:none}}
+
+/* ---- Ссылки и контакты ---- */
+.addr{font-style:normal;line-height:1.6}
+.rate{font-size:14px;color:var(--muted)}
+.rate b{font-family:var(--fd);font-weight:600;font-size:20px;color:var(--ink);margin-inline-end:6px}
+.cta{margin-top:32px}
+
+/* ================== ВАРИАНТ 1 · РАЗВОРОТ ================== */
+#b1 .place{display:grid;grid-template-columns:1.45fr 1fr;gap:clamp(32px,6vw,96px);align-items:center}
+#b1 .place .facts{margin-top:32px}
+#b1 .craft{display:grid;grid-template-columns:1fr minmax(240px,380px);gap:clamp(40px,7vw,112px);align-items:center}
+#b1 .craft .lists{margin-top:32px;max-width:520px}
+#b1 .menu-head{display:flex;flex-wrap:wrap;gap:24px 48px;align-items:end;justify-content:space-between;margin-bottom:8px}
+#b1 .picks{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);margin-top:48px}
+#b1 .picks .cat-ar{margin-top:4px;margin-bottom:8px}
+#b1 .menu-cta{margin-top:48px}
+#b1 .find{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);align-items:center}
+#b1 .find .info{display:grid;gap:16px;margin-top:24px}
+
+/* ================== «ВЕЧЕРОМ» (взято из варианта 3) ================ */
+#b1 .eve{display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:clamp(40px,7vw,112px);align-items:center}
+
+/* ================== «КАК ВНУТРИ» (из варианта 3, блок «Днём», без списка) ===== */
+#b1 .in-head{max-width:560px;margin-bottom:48px}
+#b1 .in-slots{display:grid;grid-template-columns:4fr 6fr;gap:clamp(16px,3vw,32px);align-items:end}
+
+/* ================== ПАНЕЛЬ ПОЛНОГО МЕНЮ ==================
+   Нативный <dialog>: Esc, возврат фокуса и запрет клика под панелью даёт сам браузер. */
+.dlg{padding:0;border:0;background:var(--olive-deep);color:var(--cream);
+     width:min(960px,calc(100% - 2*var(--pad)));max-width:none;max-height:min(92svh,100%);
+     border-radius:var(--r-md);box-shadow:var(--shadow);overflow:auto;overscroll-behavior:contain}
+.dlg::backdrop{background:rgba(26,24,15,.62)}
+.dlg[open]{animation:dlg-in 400ms var(--ease)}
+@keyframes dlg-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+html:has(dialog[open]){overflow:hidden}
+.dlg-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;
+          padding:20px clamp(20px,4vw,40px);background:var(--olive-deep);border-bottom:1px solid var(--line-olive)}
+.dlg-head h2{font-size:clamp(24px,3vw,32px);color:var(--cream)}
+.dlg-x{width:48px;height:48px;flex:none;border-radius:var(--r-pill);border:0;background:var(--olive);color:var(--cream);
+       display:grid;place-items:center;cursor:pointer;transition:background .2s var(--ease)}
+.dlg-x:hover{background:var(--cream);color:var(--olive-deep)}
+.dlg-x svg.i{width:20px;height:20px}
+.dlg-body{padding:8px clamp(20px,4vw,40px) 48px}
+.dlg-cat{padding-top:40px}
+.dlg-cat h3{color:var(--cream)}
+.dlg-cat .cat-ar{margin-top:4px;margin-bottom:8px}
+.dlg-note{margin-top:32px;font-size:14px;color:var(--cream-dim)}
+
+/* ВРЕМЕННО: показ двух вариантов оливы заказчику. Удалить после выбора. */
+.olive-sw{position:fixed;inset-block-end:16px;inset-inline-end:16px;z-index:20;font:500 13px/1 var(--fb);
+          padding:12px 16px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;box-shadow:var(--shadow)}
+
+/* ================== ПОДВАЛ (общий) ======================== */
+.foot{background:var(--olive-deep);color:var(--cream);padding-block:64px 48px}
+.foot-in{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:48px}
+.foot .brand b{font-size:32px}
+.foot .tag{margin-top:16px;color:var(--cream-dim);font-size:15px;max-width:30ch}
+.foot h3{margin:0 0 12px;font:600 13px/1.4 var(--fb);letter-spacing:.16em;text-transform:uppercase;color:var(--cream-dim)}
+.foot address,.foot .col p{font-style:normal;font-size:15px;line-height:1.7;margin:0}
+.foot a{color:inherit;text-decoration:none}
+.foot a:hover{text-decoration:underline;text-underline-offset:3px}
+.ico-row{display:flex;gap:12px;margin-top:20px}
+.ico{width:48px;height:48px;border-radius:var(--r-pill);background:var(--olive);color:var(--cream);display:grid;place-items:center;
+     transition:background .2s var(--ease)}
+.foot a.ico:hover{background:var(--olive-deep);box-shadow:inset 0 0 0 1px var(--cream);text-decoration:none}
+.ico svg.i{width:20px;height:20px;stroke-width:1.44}
+.foot-base{margin-top:48px;padding-top:24px;border-top:1px solid var(--line-olive);font-size:13px;color:var(--cream-dim)}
+
+@media (max-width:980px){
+  #b1 .place,#b1 .craft,#b1 .find,#b1 .eve,#b1 .picks{grid-template-columns:1fr;gap:32px}
+  #b1 .in-slots{grid-template-columns:1fr 1fr}
+  #b1 .place{align-items:start}
+  #b1 .craft .slot,#b1 .eve .slot--round{max-width:340px}
+  .foot-in{grid-template-columns:1fr;gap:32px}
+}
+@media (max-width:620px){
+  #b1 .in-slots{grid-template-columns:1fr}
+  .dlg{width:100%;max-height:100svh;height:100svh;border-radius:0}
+  /* факты через слэш на узком экране переносятся и слэш повисает в конце строки,
+     поэтому столбиком и без разделителей */
+  .body .facts{flex-direction:column;gap:4px}
+  .body .facts li:not(:last-child)::after{content:none}
+  .cta .btn{width:100%;justify-content:center}
+  .cta .alink{margin-top:8px}
+}
+</style>
+</head>
+<body>
+
+<!-- один набор иконок на весь сайт: линия 1.6, концы скруглённые -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="ic-close"><path d="M4.5 4.5l9 9M13.5 4.5l-9 9"/></g>
+    <g id="ic-chev"><path d="M6 3.5 11.5 9 6 14.5"/></g>
+    <g id="ic-pin"><path d="M9 16s5.2-4.6 5.2-8.3A5.2 5.2 0 0 0 3.8 7.7C3.8 11.4 9 16 9 16Z"/><circle cx="9" cy="7.6" r="1.9"/></g>
+    <g id="ic-chat"><path d="M15.5 8.6c0 3.2-2.9 5.8-6.5 5.8-.8 0-1.6-.1-2.3-.4L2.5 15.5l1.4-3.6a5.5 5.5 0 0 1-1.4-3.3C2.5 5.4 5.4 2.8 9 2.8s6.5 2.6 6.5 5.8Z"/></g>
+    <g id="ic-clock"><circle cx="9" cy="9" r="6.5"/><path d="M9 5.4V9l2.6 1.6"/></g>
+    <g id="ic-insta"><rect x="3" y="3" width="12" height="12" rx="3.6"/><circle cx="9" cy="9" r="2.8"/><path d="M12.6 5.4h.01"/></g>
+    <g id="ic-phone"><path d="M4.4 3h2.3l1.2 3-1.5 1a8 8 0 0 0 3.6 3.6l1-1.5 3 1.2v2.3a1.5 1.5 0 0 1-1.6 1.5A10.6 10.6 0 0 1 2.9 4.6 1.5 1.5 0 0 1 4.4 3Z"/></g>
+  </defs>
+</svg>
+
+<main>
+
+<section class="v" id="v6">
+  <div class="facade" style="--fy:46%"></div>
+  <span class="wash"></span>
+  <header class="hdr hdr--photo on-photo">
+    <a class="brand" href="#"><b>SAVVA</b></a>
+    <nav><a href="#">Menu</a><a href="#">Atmosphere</a><a href="#">Find us</a></nav>
+    <span class="lang"><b>EN</b><i>/</i><em>عربي</em></span>
+  </header>
+
+  <div class="stage">
+    <div class="wrap">
+      <div class="col">
+        <p class="over ent" style="--d:1500ms">Bir Uthman, Medina</p>
+        <p class="display ent" style="--d:1600ms">A day in savva<br>is what you need<br>to be savva.</p>
+        <p class="lead ent" style="--d:1750ms">Specialty coffee under the olive trees. Open from half past six in the morning until two at night.</p>
+        <div class="acts ent" style="--d:1900ms">
+          <a class="btn btn--primary" href="#"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+          <a class="btn btn--secondary" href="#">View the menu<svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-chev"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="body live" id="b1">
+
+  <!-- Место -->
+  <section class="sec sec--paper">
+    <div class="wrap">
+      <div class="place">
+        <div class="rv">
+          <h2>Come to sit. Stay as long as the evening does.</h2>
+          <p class="lead">Most of the menu costs between 15 and 19 SAR, so staying for a second cup is an easy decision.</p>
+          <ul class="facts">
+            <li>Sat to Thu 06:30 to 02:00</li>
+            <li>Fri 13:00 to 02:00</li>
+            <li>4.7 on Google Maps (729 reviews)</li>
+          </ul>
+        </div>
+        <div class="slot" style="--ar:4/5"><span><b>4:5</b>Интерьер: стол у окна, тёплый вечерний свет</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ремесло: олива -->
+  <section class="sec sec--olive on-dark">
+    <div class="wrap">
+      <div class="craft">
+        <div class="rv">
+          <h2>Espresso for speed. V60 for patience.</h2>
+          <p class="lead">The bar runs the classics, from espresso to Turkish coffee, and pours Ice Drip and V60 for those who would rather wait.</p>
+          <div class="lists lists--1" data-pick="Espresso|Ice Drip / V60|Turkish Coffee|Coffee of the Day (Hot / Iced)"></div>
+        </div>
+        <div class="slot" style="--ar:4/5"><span><b>4:5</b>Руки бариста над V60, крупно</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Меню: основные позиции, без закладок. Все 40 лежат в панели по кнопке -->
+  <section class="sec sec--paper" id="menu1">
+    <div class="wrap">
+      <div class="menu-head rv">
+        <div>
+          <h2>The menu</h2>
+          <p class="lead">A dozen to start. The full list has 40 items, 6 to 27 SAR, with calories as printed in the café.</p>
+        </div>
+      </div>
+      <div class="picks">
+        <div>
+          <h3>Hot</h3>
+          <p class="cat-ar" lang="ar">المشروبات الحارة</p>
+          <div class="lists lists--1" data-pick="Espresso|Americano|Flat White|Latte|Cappuccino|Spanish Latte"></div>
+        </div>
+        <div>
+          <h3>Cold</h3>
+          <p class="cat-ar" lang="ar">المشروبات الباردة</p>
+          <div class="lists lists--1" data-pick="Iced Latte|Ice Hibiscus Savva|Iced Spanish Latte|Ice Shaken|Savva Matcha|Matcha Berry"></div>
+        </div>
+      </div>
+      <div class="menu-cta">
+        <button type="button" class="btn btn--primary" id="open-menu" aria-haspopup="dialog">View full menu<svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-chev"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Вечером: олива, десерты крупно. Единственное круглое кадрирование на странице -->
+  <section class="sec sec--olive on-dark">
+    <div class="wrap">
+      <div class="eve">
+        <div class="slot slot--round"><span><b>1:1, круг</b>Десертная витрина вечером, крупно</span></div>
+        <div class="rv">
+          <h2>Something sweet after dark.</h2>
+          <p class="cat-ar" lang="ar">الحلى</p>
+          <div class="lists lists--1" data-cat="desserts" data-big="1" style="margin-top:24px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Как внутри: два прямоугольных кадра, без списка -->
+  <section class="sec sec--paper" id="inside">
+    <div class="wrap">
+      <div class="in-head rv">
+        <h2>Where everyone sits a little longer.</h2>
+      </div>
+      <div class="in-slots">
+        <div class="slot" style="--ar:4/5"><span><b>4:5</b>Стойка и чашки вечером, крупно</span></div>
+        <div class="slot" style="--ar:3/2"><span><b>3:2</b>Зал целиком: столы, свет бра, гости</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Как нас найти -->
+  <section class="sec sec--paper" id="find1">
+    <div class="wrap">
+      <div class="find">
+        <div class="rv">
+          <h2>Find us</h2>
+          <div class="info">
+            <address class="addr">Zubairah Al Roumiah, Bir Uthman<br>Madinah 42331, Saudi Arabia</address>
+            <p>Sat to Thu 06:30 to 02:00 / Fri 13:00 to 02:00</p>
+            <p><a class="alink" href="tel:+966564370303"><u>+966 56 437 0303</u></a></p>
+            <p class="rate"><b>4.7</b>on Google Maps / 729 reviews</p>
+          </div>
+          <div class="acts cta">
+            <a class="btn btn--primary" href="https://www.google.com/maps/search/?api=1&query=SAVVA+Coffee+Bir+Uthman+Madinah"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+            <a class="alink" href="https://wa.me/966564370303"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-chat"/></svg><u>Message on WhatsApp</u></a>
+          </div>
+        </div>
+        <div class="slot" style="--ar:4/3"><span><b>4:3</b>Карта: Google Maps, метка SAVVA, в палитре страницы</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<!-- ПОДВАЛ -->
+<footer class="foot on-dark">
+  <div class="wrap">
+    <div class="foot-in">
+      <div>
+        <a class="brand" href="#"><b>SAVVA</b></a>
+        <p class="tag">Specialty coffee, Bir Uthman, Medina.</p>
+        <div class="ico-row">
+          <a class="ico" href="https://instagram.com/savva_cafe" aria-label="Instagram @savva_cafe"><svg viewBox="0 0 18 18" class="i"><use href="#ic-insta"/></svg></a>
+          <a class="ico" href="https://wa.me/966564370303" aria-label="WhatsApp"><svg viewBox="0 0 18 18" class="i"><use href="#ic-chat"/></svg></a>
+          <a class="ico" href="tel:+966564370303" aria-label="Call +966 56 437 0303"><svg viewBox="0 0 18 18" class="i"><use href="#ic-phone"/></svg></a>
+          <a class="ico" href="https://www.google.com/maps/search/?api=1&query=SAVVA+Coffee+Bir+Uthman+Madinah" aria-label="Directions"><svg viewBox="0 0 18 18" class="i"><use href="#ic-pin"/></svg></a>
+        </div>
+      </div>
+      <div class="col">
+        <h3>Visit</h3>
+        <address>Zubairah Al Roumiah, Bir Uthman<br>Madinah 42331, Saudi Arabia</address>
+      </div>
+      <div class="col">
+        <h3>Hours</h3>
+        <p>Sat to Thu 06:30 to 02:00<br>Fri 13:00 to 02:00</p>
+        <p style="margin-top:12px"><a href="tel:+966564370303">+966 56 437 0303</a></p>
+      </div>
+    </div>
+    <p class="foot-base">© 2026 SAVVA Coffee / @savva_cafe</p>
+  </div>
+</footer>
+
+<!-- ПАНЕЛЬ ПОЛНОГО МЕНЮ: все 40 позиций, листается внутри -->
+<dialog class="dlg" id="fullmenu" aria-labelledby="fm-title">
+  <div class="dlg-head">
+    <h2 id="fm-title">Full menu</h2>
+    <button type="button" class="dlg-x" id="close-menu" aria-label="Close the menu"><svg viewBox="0 0 18 18" class="i"><use href="#ic-close"/></svg></button>
+  </div>
+  <div class="dlg-body">
+    <section class="dlg-cat">
+      <h3>Hot</h3>
+      <p class="cat-ar" lang="ar">المشروبات الحارة</p>
+      <div class="lists" data-cat="hot"></div>
+    </section>
+    <section class="dlg-cat">
+      <h3>Cold</h3>
+      <p class="cat-ar" lang="ar">المشروبات الباردة</p>
+      <div class="lists" data-cat="cold"></div>
+    </section>
+    <section class="dlg-cat">
+      <h3>Desserts</h3>
+      <p class="cat-ar" lang="ar">الحلى</p>
+      <div class="lists" data-cat="desserts"></div>
+    </section>
+    <section class="dlg-cat">
+      <h3>Breakfast</h3>
+      <p class="cat-ar" lang="ar">الفطور</p>
+      <div class="lists" data-cat="breakfast"></div>
+    </section>
+    <p class="dlg-note">Prices in SAR. Calories as printed in the café.</p>
+  </div>
+</dialog>
+
+<!-- ВРЕМЕННО: показ двух оттенков оливы. Удалить после выбора заказчика -->
+<button type="button" class="olive-sw" id="olive-sw">Олива: средний</button>
+
+<script>
+/* Слои света собираем скриптом, чтобы не плодить одинаковую разметку.
+   Два файла на все кадры: погашенный фасад и чистый свет.
+   Зоны включаются по очереди — это и есть «загорается само». */
+const OFF = 'assets/hero-off.webp', LIGHT = 'assets/hero-light.webp';
+const ZONES = ['room', 'bra', 'en', 'ar', 'out', 'amb'];
+document.querySelectorAll('.facade').forEach(f => {
+  const frame = document.createElement('div');
+  frame.className = 'frame';
+  frame.innerHTML =
+    '<img class="fc" src="' + OFF + '" width="1280" height="720" alt="' +
+      (f.dataset.alt || 'Фасад кофейни SAVVA, Бир Усман, Медина') + '">' +
+    ZONES.map(z => '<img class="fc lay lay--' + z + '" src="' + LIGHT +
+                   '" alt="" aria-hidden="true">').join('');
+  f.prepend(frame);
+});
+
+/* ---------- МЕНЮ: один массив на все три варианта ----------
+   Перенесён дословно из ..\SAVVA-demo\assets\js\menu.js (40 позиций).
+   Каждое тело рисует его своей разметкой, поэтому цифры разъехаться не могут. */
+const MENU = [
+  { cat: "hot", en: "Espresso", ar: "إسبريسو", price: 11, cal: 2 },
+  { cat: "hot", en: "Americano", ar: "أمريكانو", price: 12, cal: 2 },
+  { cat: "hot", en: "Cortado", ar: "كورتادو", price: 14, cal: 50 },
+  { cat: "hot", en: "Macchiato", ar: "ميكاتو", price: 13, cal: 13 },
+  { cat: "hot", en: "Flat White", ar: "فلات وايت", price: 15, cal: 50 },
+  { cat: "hot", en: "Latte", ar: "لاتيه", price: 16, cal: 75 },
+  { cat: "hot", en: "Cappuccino", ar: "كابتشينو", price: 16, cal: 60 },
+  { cat: "hot", en: "Spanish Latte", ar: "سبانش لاتيه", price: 18, cal: 178 },
+  { cat: "hot", en: "Matcha Latte", ar: "ماتشا لاتيه", price: 16, cal: 75 },
+  { cat: "hot", en: "White Mocha", ar: "وايت موكا", price: 16, cal: 230 },
+  { cat: "hot", en: "Hot Chocolate", ar: "هوت شوكليت", price: 15, cal: 237 },
+  { cat: "hot", en: "English Tea", ar: "شاي انجليزي", price: 6, cal: 2 },
+  { cat: "hot", en: "Turkish Coffee", ar: "تركي سادة", price: 11, cal: 50 },
+  { cat: "hot", en: "Turkish Coffee with Milk", ar: "تركي حليب", price: 13, cal: 50 },
+  { cat: "hot", en: "Coffee of the Day (Hot / Iced)", ar: "قهوة اليوم بارد / حار", price: "10-13", cal: null },
+  { cat: "hot", en: "Ice Drip / V60", ar: "قهوة المقطرة", price: 18, cal: null },
+
+  { cat: "cold", en: "Iced Americano", ar: "ايس أمريكانو", price: 15, cal: 2 },
+  { cat: "cold", en: "Alfredo", ar: "ألفريدو", price: 14, cal: 100 },
+  { cat: "cold", en: "Iced Latte", ar: "ايس لاتيه", price: 17, cal: 100 },
+  { cat: "cold", en: "Iced Spanish Latte", ar: "ايس سبانيش لاتيه", price: 19, cal: 230 },
+  { cat: "cold", en: "Iced Matcha Latte", ar: "ايس ماتشا لاتيه", price: 17, cal: 130 },
+  { cat: "cold", en: "Iced Matcha Spanish Latte", ar: "ايس ماتشا سبانيش لاتيه", price: 19, cal: 230 },
+  { cat: "cold", en: "Savva Matcha", ar: "سافا ماتشا", price: 22, cal: 2 },
+  { cat: "cold", en: "Matcha Berry", ar: "ماتشا بيري", price: 24, cal: 230 },
+  { cat: "cold", en: "Ice Tea Savva", ar: "ايس تي سافا", price: 17, cal: 189 },
+  { cat: "cold", en: "Ice Hibiscus Savva", ar: "ايس كركديه سافا", price: 17, cal: 180 },
+  { cat: "cold", en: "Hibiscus Slush Savva", ar: "سلاش كركديه سافا", price: 17, cal: 180 },
+  { cat: "cold", en: "Ice Shaken", ar: "ايس شيكن", price: 20, cal: 231 },
+  { cat: "cold", en: "Ice White Mocha", ar: "ايس وايت موكا", price: 19, cal: 230 },
+  { cat: "cold", en: "Ice Chocolate", ar: "ايس شوكلت", price: 17, cal: 230 },
+  { cat: "cold", en: "Savva Melon", ar: "شمام سافا", price: 16, cal: 50 },
+
+  { cat: "desserts", en: "Madini Cookies", ar: "مديني كوكيز", price: 12, cal: 170 },
+  { cat: "desserts", en: "Cinnamon Danish", ar: "دانيش سينابون", price: 19, cal: 170 },
+  { cat: "desserts", en: "Marble Cake", ar: "ماربل كيك", price: 11, cal: 170 },
+  { cat: "desserts", en: "Crunchy Chocolate", ar: "كرانشي شوكلت", price: 8, cal: 170 },
+  { cat: "desserts", en: "Blueberry Cheesecake", ar: "تشيز كيك بلوبيري", price: 27, cal: 170 },
+  { cat: "desserts", en: "Pecan Cake", ar: "كيكة البيكان", price: 21, cal: 170 },
+  { cat: "desserts", en: "Chocolate Cake", ar: "كيكة شوكلت", price: 18, cal: 170 },
+
+  { cat: "breakfast", en: "Turkey Sandwich", ar: "ساندوتش تركي", price: 19, cal: 300 },
+  { cat: "breakfast", en: "Halloumi Sandwich", ar: "ساندوتش حلوم", price: 18, cal: 300 }
+];
+
+// диапазон цены пишем со знаком диапазона, а не дефисом
+const fmt = p => typeof p === 'number' ? p : String(p).replace('-', '–');
+const row = (i, big) =>
+  '<div class="row' + (big ? ' row--big' : '') + '"><div>' +
+    '<span class="en">' + i.en + '</span><span class="ar" lang="ar" dir="rtl">' + i.ar + '</span></div>' +
+  '<div class="pr">' + fmt(i.price) + (i.cal != null ? '<small>' + i.cal + ' cal</small>' : '') + '</div></div>';
+
+// [data-cat] — вся категория, [data-pick] — выбранные названия через |
+document.querySelectorAll('[data-cat]').forEach(el => {
+  el.innerHTML = MENU.filter(i => i.cat === el.dataset.cat).map(i => row(i, el.dataset.big)).join('');
+});
+document.querySelectorAll('[data-pick]').forEach(el => {
+  el.innerHTML = el.dataset.pick.split('|').map(n => {
+    const i = MENU.find(m => m.en === n);
+    if (!i) throw new Error('Нет в меню: ' + n);
+    return row(i, el.dataset.big);
+  }).join('');
+});
+
+/* ---------- Панель полного меню ---------- */
+const fm = document.getElementById('fullmenu');
+document.getElementById('open-menu').addEventListener('click', () => fm.showModal());
+document.getElementById('close-menu').addEventListener('click', () => fm.close());
+// щелчок по затемнению вне панели закрывает её
+fm.addEventListener('click', e => { if (e.target === fm) fm.close(); });
+
+/* ---------- ВРЕМЕННО: показ двух оттенков оливы ---------- */
+const sw = document.getElementById('olive-sw');
+function setOlive(light){
+  document.documentElement.dataset.olive = light ? 'light' : 'mid';
+  sw.textContent = 'Олива: ' + (light ? 'светлый предел' : 'средний');
+}
+setOlive(new URLSearchParams(location.search).get('olive') === 'light');
+sw.addEventListener('click', () => setOlive(document.documentElement.dataset.olive !== 'light'));
+
+/* ---------- Появление при прокрутке: один приём ---------- */
+document.documentElement.classList.add('js');
+const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), { rootMargin: '0px 0px -8% 0px' }) : null;
+document.querySelectorAll('.rv').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+
+/* ---------- Свет зажигается сам при открытии ---------- */
+const hero = document.getElementById('v6');
+hero.classList.add('live', 'on');
+setTimeout(() => hero.classList.add('done'), 3000);   // страховка: через 3 секунды экран обязан быть виден целиком
+</script>
+</body>
+</html>

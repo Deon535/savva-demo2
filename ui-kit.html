@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI-kit — SAVVA Coffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAF6EC; --paper-2:#F2EADA;
+  --ink:#403D27; --muted:#6B6650; --line:#DFD6C0;
+  --olive-deep:#3E3B24; --olive:#585434; --sage:#80826A;
+  --cream:#E8D8B8; --cream-dim:rgba(232,216,184,.66);
+  --gold:#C9A765;
+  --r-sm:8px; --r-md:14px; --r-pill:999px;
+  --shadow:0 1px 2px rgba(64,61,39,.05), 0 12px 32px rgba(64,61,39,.08);
+  --ease:cubic-bezier(.19,1,.22,1);
+  --fd:"Fraunces",Georgia,serif;
+  --fb:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --fad:"Noto Naskh Arabic",serif;
+  --fab:"IBM Plex Sans Arabic","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--fb);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding-inline:clamp(20px,5vw,48px)}
+section{padding-block:clamp(48px,8vw,96px)}
+.sec--olive{background:var(--olive-deep);color:var(--cream)}
+.sec--paper2{background:var(--paper-2)}
+
+/* типографика */
+.display,h1,h2,h3{font-family:var(--fd);line-height:.95;letter-spacing:-.02em;margin:0;font-weight:700}
+.display{font-size:clamp(44px,9vw,96px)}
+h1{font-size:clamp(36px,6vw,64px)}
+h2{font-size:clamp(28px,4.4vw,42px);font-weight:600}
+h3{font-size:clamp(20px,2.2vw,24px);font-weight:600}
+.over{font-family:var(--fb);font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 16px}
+.sec--olive .over{color:var(--cream-dim)}
+.lead{font-size:clamp(17px,1.6vw,20px);line-height:1.6;max-width:60ch;margin:16px 0 0}
+.small{font-size:14px;color:var(--muted)}
+.sec--olive .small{color:var(--cream-dim)}
+.price{font-family:var(--fd);font-weight:600;font-size:20px}
+
+/* служебное для самого кита */
+.kit-head{border-bottom:1px solid var(--line);padding-block:32px}
+.kit-tag{display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:var(--r-pill);padding:5px 14px}
+.note{font-size:14px;color:var(--muted);max-width:68ch;margin-top:12px}
+.sec--olive .note{color:var(--cream-dim)}
+.grid{display:grid;gap:24px}
+.row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+hr.rule{border:0;border-top:1px solid var(--line);margin:48px 0}
+
+/* палитра */
+.sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:16px}
+.sw figure{margin:0}
+.sw .chip{height:88px;border-radius:var(--r-md);border:1px solid var(--line)}
+.sw b{display:block;font-family:var(--fb);font-weight:600;font-size:14px;margin-top:10px}
+.sw span{display:block;font-size:13px;color:var(--muted)}
+
+/* компоненты */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--fb);font-weight:600;font-size:15px;
+     padding:14px 28px;border-radius:var(--r-pill);border:0;cursor:pointer;text-decoration:none;
+     transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease)}
+.btn svg{transition:transform .2s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+.btn--primary{background:var(--olive);color:var(--cream)}
+.btn--primary:hover{background:var(--olive-deep)}
+.sec--olive .btn--primary{background:var(--cream);color:var(--olive-deep)}
+.sec--olive .btn--primary:hover{background:#DCC9A6}
+.btn--secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn--secondary:hover{border-color:var(--olive);color:var(--olive)}
+.sec--olive .btn--secondary{color:var(--cream);border-color:rgba(128,130,106,.6)}
+.sec--olive .btn--secondary:hover{border-color:var(--gold);color:var(--gold)}
+.alink{display:inline-flex;align-items:center;gap:8px;color:inherit;text-decoration:none;font-weight:500;font-size:15px}
+.alink u{text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+.alink:hover u{border-color:currentColor}
+.alink:hover svg{transform:translateX(3px)}
+.alink svg{transition:transform .2s var(--ease)}
+
+/* карточка напитка */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:24px}
+.card figure{margin:0;aspect-ratio:4/5;border-radius:var(--r-md);overflow:hidden;background:var(--paper-2);
+             display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;border:1px solid var(--line)}
+.sec--olive .card figure{background:rgba(128,130,106,.18);border-color:rgba(128,130,106,.4);color:var(--cream-dim)}
+.card h3{margin-top:14px}
+.card .ar{font-family:var(--fab);font-size:14px;color:var(--muted);margin-top:2px}
+.sec--olive .card .ar{color:var(--cream-dim)}
+.card .meta{display:flex;align-items:baseline;gap:10px;margin-top:8px}
+
+/* строка меню */
+.mrow{display:flex;align-items:baseline;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.sec--olive .mrow{border-color:rgba(128,130,106,.35)}
+.mrow .nm{font-weight:500}
+.mrow .ar{font-family:var(--fab);font-size:14px;color:var(--muted)}
+.sec--olive .mrow .ar{color:var(--cream-dim)}
+.mrow .sp{flex:1}
+.tabs{display:flex;gap:28px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.sec--olive .tabs{border-color:rgba(128,130,106,.35)}
+.tabs button{background:0;border:0;padding:0 0 14px;font-family:var(--fb);font-size:15px;font-weight:500;
+             color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--gold)}
+.sec--olive .tabs button{color:var(--cream-dim)}
+.sec--olive .tabs button[aria-selected=true]{color:var(--cream)}
+
+/* иконки */
+.icons{display:flex;flex-wrap:wrap;gap:24px}
+.ico{width:48px;height:48px;border-radius:var(--r-pill);background:var(--sage);display:grid;place-items:center}
+.ico svg{stroke:var(--cream);stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* шапка-пример */
+.hdr{display:flex;align-items:center;gap:24px;padding:16px 24px;border-radius:var(--r-md);background:var(--paper);border:1px solid var(--line)}
+.hdr--onphoto{background:rgba(42,40,26,.42);border-color:transparent;color:var(--cream)}
+.hdr nav{display:flex;gap:24px;flex:1;font-size:15px;font-weight:500}
+.logo{font-family:var(--fd);font-weight:700;font-size:22px;letter-spacing:.01em}
+.lang{font-size:14px;color:var(--muted)}
+.hdr--onphoto .lang{color:var(--cream-dim)}
+.lang b{color:inherit;font-weight:600}
+.hdr--onphoto .lang b{color:var(--cream)}
+
+/* арабский блок */
+[dir=rtl]{font-family:var(--fab)}
+[dir=rtl] .adisp{font-family:var(--fad);line-height:1.3;letter-spacing:0;font-weight:700}
+.ar-demo{border:1px solid var(--line);border-radius:var(--r-md);padding:28px}
+.sec--olive .ar-demo{border-color:rgba(128,130,106,.4)}
+
+@media(max-width:700px){ .hdr nav{display:none} }
+</style>
+</head>
+<body>
+
+<div class="wrap kit-head">
+  <span class="kit-tag">Выбранное направление</span>
+  <h1 style="margin-top:16px">Тёплая редакторская Медина</h1>
+  <p class="lead">Сайт как журнал о кофе. Кремовая бумага, в неё врезаются глубокие оливковые развороты. Листаешь — светло, темно, светло. Золото живёт только как свет на фотографии.</p>
+  <p class="note">Это ui-kit: система, которую видно глазами. Правила — в <b>design-system.md</b>. Все цифры и названия здесь настоящие, из меню SAVVA.</p>
+</div>
+
+<!-- ПАЛИТРА -->
+<section class="wrap">
+  <p class="over">01 — Палитра</p>
+  <h2>Пять ролей в двух средах и один акцент</h2>
+  <p class="note">Среда «бумага» — основная часть страницы. Среда «олива» — врезные секции и подвал. Новый цвет не вводим никогда.</p>
+
+  <h3 style="margin:40px 0 16px;font-size:20px">Бумага</h3>
+  <div class="sw">
+    <figure><div class="chip" style="background:#FAF6EC"></div><b>--paper</b><span>#FAF6EC · основной фон</span></figure>
+    <figure><div class="chip" style="background:#F2EADA"></div><b>--paper-2</b><span>#F2EADA · второй фон</span></figure>
+    <figure><div class="chip" style="background:#403D27"></div><b>--ink</b><span>#403D27 · текст, заголовки</span></figure>
+    <figure><div class="chip" style="background:#6B6650"></div><b>--muted</b><span>#6B6650 · приглушённый</span></figure>
+    <figure><div class="chip" style="background:#DFD6C0"></div><b>--line</b><span>#DFD6C0 · линии</span></figure>
+  </div>
+
+  <h3 style="margin:40px 0 16px;font-size:20px">Олива</h3>
+  <div class="sw">
+    <figure><div class="chip" style="background:#3E3B24"></div><b>--olive-deep</b><span>#3E3B24 · фон врезки</span></figure>
+    <figure><div class="chip" style="background:#585434"></div><b>--olive</b><span>#585434 · заливка кнопки</span></figure>
+    <figure><div class="chip" style="background:#80826A"></div><b>--sage</b><span>#80826A · из логотипа</span></figure>
+    <figure><div class="chip" style="background:#E8D8B8"></div><b>--cream</b><span>#E8D8B8 · текст на оливе</span></figure>
+    <figure><div class="chip" style="background:#C9A765"></div><b>--gold</b><span>#C9A765 · только свет</span></figure>
+  </div>
+
+  <p class="note" style="margin-top:24px"><b>--sage</b> снят пипеткой с круга логотипа. Полоса фасада на фото героя — #453C27, камень — #8F7152, свечение вывески — #99784D: фотография ложится в палитру сама.</p>
+</section>
+
+<!-- ТИПОГРАФИКА -->
+<section class="wrap sec--paper2">
+  <p class="over">02 — Типографика</p>
+  <h2>Fraunces в заголовке, IBM Plex Sans в тексте</h2>
+  <p class="note">Fraunces — мягкая характерная антиква с живыми формами, перекликается с рисованным логотипом SAVVA. Межстрочный 0.95, трекинг −0.02em: заголовок плотный, стремится к прямоугольнику.</p>
+
+  <hr class="rule">
+  <p class="small">Дисплей · 96 / 44</p>
+  <div class="display">More than<br>just coffee</div>
+
+  <hr class="rule">
+  <p class="small">H1 · 64 / 36</p>
+  <h1>A place with the soul of Medina</h1>
+
+  <hr class="rule">
+  <p class="small">H2 · 42 / 28 — заголовок секции</p>
+  <h2>Taste in every detail</h2>
+
+  <hr class="rule">
+  <p class="small">H3 · 24 / 20</p>
+  <h3>Spanish Latte</h3>
+
+  <hr class="rule">
+  <p class="small">Надзаголовок · 13, трекинг +0.16em — единственное место с разрядкой</p>
+  <p class="over" style="margin:0">Наше меню</p>
+
+  <hr class="rule">
+  <p class="small">Лид · 20 / 17</p>
+  <p class="lead">Specialty coffee in Bir Uthman, Medina. Open from half past six in the morning until two at night.</p>
+
+  <hr class="rule">
+  <p class="small">Текст · 17 / 16</p>
+  <p style="max-width:68ch">A day in savva is what you need to be savva. Настоящая строка из описания кофейни — её и используем, ничего не выдумываем.</p>
+
+  <hr class="rule">
+  <p class="small">Цена · 20 — набрана заголовочным шрифтом, это делает её вещью, а не цифрой</p>
+  <span class="price">18 SAR</span>
+</section>
+
+<!-- АРАБСКИЙ -->
+<section class="wrap">
+  <p class="over">03 — Два языка</p>
+  <h2>Арабский равный, а не прикрученный</h2>
+  <p class="note">Заголовки — Noto Naskh Arabic (каллиграфическая традиция, родная для Медины). Текст — IBM Plex Sans Arabic: одна семья с латинским IBM Plex Sans, одинаковые веса. Два языка звучат одним голосом.</p>
+
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:32px">
+    <div class="ar-demo">
+      <p class="small" style="margin-top:0">Латиница — Fraunces + IBM Plex Sans</p>
+      <h2>More than just coffee</h2>
+      <p style="margin-bottom:0">SAVVA is where taste, atmosphere and culture meet.</p>
+    </div>
+    <div class="ar-demo" dir="rtl">
+      <p class="small" style="margin-top:0;font-family:var(--fab)">عربي — Noto Naskh Arabic + IBM Plex Sans Arabic</p>
+      <h2 class="adisp">أكثر من مجرد قهوة</h2>
+      <p style="margin-bottom:0">سافا هو المكان الذي يلتقي فيه الطعم والأجواء والثقافة.</p>
+    </div>
+  </div>
+</section>
+
+<!-- КНОПКИ -->
+<section class="wrap sec--paper2">
+  <p class="over">04 — Кнопки и ссылки</p>
+  <h2>Один способ выделения на элементе</h2>
+  <p class="note">Основная кнопка — только заливка. Вторичная — только обводка. Никогда заливка + обводка + тень разом.</p>
+  <div class="row" style="margin-top:32px">
+    <a class="btn btn--primary" href="#">Построить маршрут
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <a class="btn btn--secondary" href="#">Всё меню
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <a class="alink" href="#"><u>Как нас найти</u>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+</section>
+
+<!-- ИКОНКИ -->
+<section class="wrap">
+  <p class="over">05 — Иконки</p>
+  <h2>Один набор, одна толщина</h2>
+  <p class="note">Кружок --sage с тонкой кремовой линией внутри — ровно стиль иконок из Инстаграма SAVVA. Толщина линии 1.6px, концы скруглённые, у всех без исключения. Эмодзи и чужие библиотеки запрещены.</p>
+  <div class="icons" style="margin-top:32px">
+    <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M4 8h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"/><path d="M16 9h2.5a2.5 2.5 0 0 1 0 5H16"/><path d="M7 3v2M11 3v2"/></svg></div>
+    <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
+    <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.2 2"/></svg></div>
+    <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M6.5 4h3l1.5 4-2 1.4a12 12 0 0 0 5.6 5.6l1.4-2 4 1.5v3a1.6 1.6 0 0 1-1.8 1.6A16 16 0 0 1 4.9 5.8 1.6 1.6 0 0 1 6.5 4z"/></svg></div>
+    <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><circle cx="16.6" cy="7.4" r=".9" fill="currentColor" stroke="none"/></svg></div>
+    <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+  </div>
+</section>
+
+<!-- ВРЕЗНАЯ СЕКЦИЯ: КАРТОЧКИ -->
+<section class="sec--olive">
+  <div class="wrap">
+    <p class="over">06 — Врезная секция + Карточка напитка</p>
+    <h2>Вкус, который остаётся в памяти</h2>
+    <p class="lead">Так выглядит ритм страницы: кремовая секция — оливковая врезка — снова кремовая. Две оливковые подряд запрещены.</p>
+
+    <div class="cards" style="margin-top:48px">
+      <article class="card"><figure>место под фото 4:5</figure>
+        <h3>Spanish Latte</h3><p class="ar">سبانش لاتيه</p>
+        <div class="meta"><span class="price">18 SAR</span><span class="small">178 ккал</span></div></article>
+      <article class="card"><figure>место под фото 4:5</figure>
+        <h3>Flat White</h3><p class="ar">فلات وايت</p>
+        <div class="meta"><span class="price">15 SAR</span><span class="small">50 ккал</span></div></article>
+      <article class="card"><figure>место под фото 4:5</figure>
+        <h3>Matcha Latte</h3><p class="ar">ماتشا لاتيه</p>
+        <div class="meta"><span class="price">16 SAR</span><span class="small">75 ккал</span></div></article>
+      <article class="card"><figure>место под фото 4:5</figure>
+        <h3>V60</h3><p class="ar">قهوة المقطرة</p>
+        <div class="meta"><span class="price">18 SAR</span><span class="small">—</span></div></article>
+    </div>
+
+    <div class="row" style="margin-top:40px">
+      <a class="btn btn--primary" href="#">Посмотреть всё меню
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn--secondary" href="#">Связаться в WhatsApp</a>
+    </div>
+    <p class="note" style="margin-top:24px">Места под фото — пустые намеренно. Сначала вёрстка, потом фото в места, не наоборот.</p>
+  </div>
+</section>
+
+<!-- СТРОКА МЕНЮ -->
+<section class="wrap">
+  <p class="over">07 — Строка меню</p>
+  <h2>Разделяем воздухом, не точками</h2>
+  <p class="note">Активная категория подчёркнута золотой линией — единственное место на сайте, где золото становится линией.</p>
+
+  <div class="tabs" style="margin-top:32px" role="tablist">
+    <button role="tab" aria-selected="true">Горячие</button>
+    <button role="tab" aria-selected="false">Холодные</button>
+    <button role="tab" aria-selected="false">Десерты</button>
+    <button role="tab" aria-selected="false">Завтрак</button>
+  </div>
+
+  <div style="max-width:760px">
+    <div class="mrow"><span class="nm">Espresso</span><span class="ar">إسبريسو</span><span class="sp"></span><span class="small">2 ккал</span><span class="price">11 SAR</span></div>
+    <div class="mrow"><span class="nm">Cortado</span><span class="ar">كورتادو</span><span class="sp"></span><span class="small">50 ккал</span><span class="price">14 SAR</span></div>
+    <div class="mrow"><span class="nm">Flat White</span><span class="ar">فلات وايت</span><span class="sp"></span><span class="small">50 ккал</span><span class="price">15 SAR</span></div>
+    <div class="mrow"><span class="nm">Cappuccino</span><span class="ar">كابتشينو</span><span class="sp"></span><span class="small">60 ккал</span><span class="price">16 SAR</span></div>
+    <div class="mrow"><span class="nm">Turkish Coffee</span><span class="ar">تركي سادة</span><span class="sp"></span><span class="small">50 ккал</span><span class="price">11 SAR</span></div>
+  </div>
+</section>
+
+<!-- ШАПКА -->
+<section class="wrap sec--paper2">
+  <p class="over">08 — Шапка</p>
+  <h2>Два состояния</h2>
+  <p class="note">Поверх фото фасада — прозрачная с собственной подложкой, чтобы логотип читался. Как только герой уехал вверх — плотная, на бумаге.</p>
+
+  <div style="margin-top:32px;border-radius:var(--r-md);overflow:hidden">
+    <div style="background:url('materials/hero/photo_1_2026-10-06_14-42-46.jpg') center/cover;padding:20px">
+      <div class="hdr hdr--onphoto">
+        <span class="logo">SAVVA</span>
+        <nav><span>О нас</span><span>Меню</span><span>Атмосфера</span><span>Как нас найти</span></nav>
+        <span class="lang"><b>EN</b> / عربي</span>
+        <a class="btn btn--primary" href="#" style="padding:11px 22px">Маршрут</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hdr" style="margin-top:20px">
+    <span class="logo">SAVVA</span>
+    <nav><span>О нас</span><span>Меню</span><span>Атмосфера</span><span>Как нас найти</span></nav>
+    <span class="lang"><b>EN</b> / عربي</span>
+    <a class="btn btn--primary" href="#" style="padding:11px 22px">Маршрут</a>
+  </div>
+</section>
+
+<!-- ОТСТУПЫ -->
+<section class="wrap">
+  <p class="over">09 — Отступы</p>
+  <h2>Шаг 4px, других значений нет</h2>
+  <div class="row" style="margin-top:24px;align-items:flex-end">
+    <div style="text-align:center"><div style="width:4px;height:4px;background:var(--olive)"></div><span class="small">4</span></div>
+    <div style="text-align:center"><div style="width:8px;height:8px;background:var(--olive)"></div><span class="small">8</span></div>
+    <div style="text-align:center"><div style="width:16px;height:16px;background:var(--olive)"></div><span class="small">16</span></div>
+    <div style="text-align:center"><div style="width:24px;height:24px;background:var(--olive)"></div><span class="small">24</span></div>
+    <div style="text-align:center"><div style="width:32px;height:32px;background:var(--olive)"></div><span class="small">32</span></div>
+    <div style="text-align:center"><div style="width:48px;height:48px;background:var(--olive)"></div><span class="small">48</span></div>
+    <div style="text-align:center"><div style="width:64px;height:64px;background:var(--olive)"></div><span class="small">64</span></div>
+    <div style="text-align:center"><div style="width:96px;height:96px;background:var(--olive)"></div><span class="small">96</span></div>
+    <div style="text-align:center"><div style="width:112px;height:112px;background:var(--olive)"></div><span class="small">112</span></div>
+  </div>
+  <p class="note" style="margin-top:24px">Отступ внутри секции по вертикали: 112 на десктопе, 64 на телефоне. <b>Между секциями отступа нет вообще</b> — они стыкуются вплотную, разделяет их смена фона. Так не возникает «двойной дыры».</p>
+</section>
+
+<!-- ПОДВАЛ -->
+<footer class="sec--olive">
+  <div class="wrap" style="padding-block:64px">
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <div>
+        <span class="logo" style="color:var(--cream)">SAVVA</span>
+        <p class="small" style="margin-top:8px">Specialty coffee · سافا</p>
+      </div>
+      <div>
+        <p class="over" style="margin-bottom:10px">Адрес</p>
+        <p class="small" style="margin:0">Zubairah Al Roumiah, Bir Uthman<br>Madinah 42331, Saudi Arabia</p>
+      </div>
+      <div>
+        <p class="over" style="margin-bottom:10px">Часы</p>
+        <p class="small" style="margin:0">Сб–Чт 06:30 – 02:00<br>Пт 13:00 – 02:00</p>
+      </div>
+      <div>
+        <p class="over" style="margin-bottom:10px">Связь</p>
+        <p class="small" style="margin:0">+966 56 437 0303<br>@savva_cafe</p>
+      </div>
+    </div>
+    <p class="note" style="margin-top:48px">Все данные настоящие: адрес и часы из Google Maps, цены из официального меню по QR-коду в кофейне. Ничего не выдумано.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Веер 1 — первые экраны · SAVVA Coffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   ТОКЕНЫ — целиком из design-system.md, ни одного нового значения
+   ================================================================ */
+:root{
+  --paper:#FAF6EC; --paper-2:#F2EADA;
+  --ink:#403D27; --muted:#6B6650; --line:#DFD6C0;
+  --olive-deep:#3E3B24; --olive:#585434; --sage:#80826A;
+  --cream:#E8D8B8; --cream-dim:rgba(232,216,184,.66);
+  --gold:#C9A765;
+  --r-sm:8px; --r-md:14px; --r-pill:999px;
+  --shadow:0 1px 2px rgba(64,61,39,.05), 0 12px 32px rgba(64,61,39,.08);
+  --ease:cubic-bezier(.19,1,.22,1);
+  --fd:"Fraunces",Georgia,serif;
+  --fb:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --fad:"Noto Naskh Arabic",serif;
+  --fab:"IBM Plex Sans Arabic","Segoe UI",sans-serif;
+  --bar:104px;                 /* высота панели веера, в сайт не входит */
+  --pad:clamp(20px,5vw,48px);  /* боковые поля: 20 моб / 48 десктоп */
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;padding-block-end:var(--bar);background:var(--paper);color:var(--ink);
+     font-family:var(--fb);font-size:17px;line-height:1.65;
+     -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* браузерные поверхности тоже из палитры */
+::selection{background:rgba(201,167,101,.38);color:var(--ink)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:var(--r-sm)}
+html{scrollbar-color:var(--sage) var(--paper-2)}
+
+/* ================================================================
+   ТИПОГРАФИКА — шкала из раздела 3 дизайн-системы
+   ================================================================ */
+.display,h1,h2,h3{font-family:var(--fd);line-height:.95;letter-spacing:-.02em;margin:0;font-weight:700}
+.display{font-size:clamp(44px,8.2vw,96px)}
+h1{font-size:clamp(36px,6vw,64px)}
+h3{font-size:clamp(20px,2.2vw,24px);font-weight:600}
+.lead{font-size:clamp(17px,1.6vw,20px);line-height:1.6;max-width:46ch;margin:0}
+.small{font-size:14px;color:var(--muted);line-height:1.6}
+.ar-d{font-family:var(--fad);font-weight:700;line-height:1.3;letter-spacing:0;direction:rtl}
+.ar-b{font-family:var(--fab);direction:rtl;line-height:1.8}
+
+/* строка фактов — делим слэшем, не точками (всегда п.12) */
+.facts{display:flex;flex-wrap:wrap;gap:10px;font-size:14px;color:var(--muted);line-height:1.6;margin:0;padding:0;list-style:none}
+.facts li:not(:last-child)::after{content:"/";margin-inline-start:10px;color:var(--line)}
+.on-dark .facts{color:var(--cream-dim)}
+.on-dark .facts li:not(:last-child)::after{color:rgba(128,130,106,.7)}
+.on-photo .facts{color:var(--cream-dim)}
+
+/* ================================================================
+   КОМПОНЕНТЫ — имена как в разделе 6 дизайн-системы
+   ================================================================ */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--fb);font-weight:600;font-size:15px;
+     padding:14px 28px;border-radius:var(--r-pill);border:0;cursor:pointer;text-decoration:none;white-space:nowrap;
+     transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease)}
+.btn svg{transition:transform .2s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+[dir=rtl] .btn:hover svg{transform:translateX(-3px)}
+.btn--primary{background:var(--olive);color:var(--cream)}
+.btn--primary:hover{background:var(--olive-deep)}
+.on-dark .btn--primary,.on-photo .btn--primary{background:var(--cream);color:var(--olive-deep)}
+.on-dark .btn--primary:hover,.on-photo .btn--primary:hover{background:#DCC9A6}
+.btn--secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn--secondary:hover{border-color:var(--olive);color:var(--olive)}
+.on-dark .btn--secondary{color:var(--cream);border-color:rgba(128,130,106,.6)}
+.on-dark .btn--secondary:hover{border-color:var(--gold);color:var(--gold)}
+.on-photo .btn--secondary{color:var(--cream);border-color:rgba(232,216,184,.62)}
+.on-photo .btn--secondary:hover{border-color:var(--cream);color:var(--cream)}
+
+.alink{display:inline-flex;align-items:center;gap:8px;color:inherit;text-decoration:none;font-weight:500;font-size:15px}
+.alink u{text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+.alink:hover u{border-color:currentColor}
+.alink svg{transition:transform .2s var(--ease)}
+.alink:hover svg{transform:translateX(3px)}
+
+.acts{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+/* Шапка */
+.hdr{display:flex;align-items:center;gap:32px;padding:18px var(--pad);width:100%}
+/* подложка шапки поверх фото: .42 из дизайн-системы не держит текст,
+   если под шапкой попадает светлый кусок кадра. Подняли до .86 —
+   получается оливковая лента, как фризовая полоса на самом фасаде. */
+.hdr--photo{position:absolute;inset-block-start:0;inset-inline:0;z-index:4;background:rgba(62,59,36,.86);color:var(--cream)}
+.hdr--paper{border-bottom:1px solid var(--line)}
+.hdr--olive{color:var(--cream)}
+.brand{display:flex;flex-direction:column;line-height:1;text-decoration:none;color:inherit}
+.brand b{font-family:var(--fd);font-weight:700;font-size:24px;letter-spacing:.01em}
+.hdr nav{display:flex;gap:28px;flex:1;font-size:15px;font-weight:500}
+.hdr nav a{color:inherit;text-decoration:none;opacity:.86;transition:opacity .2s}
+.hdr nav a:hover{opacity:1}
+.lang{display:flex;gap:8px;font-size:14px;align-items:center;color:var(--muted)}
+.hdr--photo .lang,.hdr--olive .lang{color:var(--cream-dim)}
+.lang b{font-weight:600;color:var(--ink)}
+.hdr--photo .lang b,.hdr--olive .lang b{color:var(--cream)}
+.lang i{font-style:normal;opacity:.5}
+.lang em{font-family:var(--fab);font-style:normal}
+
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+svg.i--s{width:15px;height:15px}
+
+/* ================================================================
+   ФАСАД, КОТОРЫЙ ЗАГОРАЕТСЯ САМ
+   Два кадра, оба сделаны из одного исходного: `hero-off.webp` — свет
+   выключен, `hero-light.webp` — чистый свет (горящий кадр минус погашенный).
+   Свет не «проявляется», а ДОБАВЛЯЕТСЯ поверх тёмного фасада зонами —
+   поэтому форма свечения настоящая, а не овальное пятно.
+
+   Как сделаны файлы (ffmpeg, из materials/hero/photo_1_...jpg):
+   1) погашенный кадр —
+      -vf "curves=all='0/0 0.22/0.075 0.45/0.135 0.7/0.195 1/0.26',
+           eq=saturation=0.5:gamma=1.02,
+           colorchannelmixer=.94:.03:0:0:.02:.96:0:0:0:.02:.80"
+   2) чистый свет — вычитание, обязательно в RGB, иначе уходит в зелень:
+      -filter_complex "[0:v]format=gbrp[a];[1:v]format=gbrp[b];
+                       [a][b]blend=all_mode=subtract,format=yuvj420p"
+   Порядок: зал → бра → SAVVA → سافا → уличные лампы → общий свет. 2.45 с.
+   ================================================================ */
+.facade{position:relative;overflow:hidden;background:#15140D;container-type:size}
+/* кадр всегда ровно 16:9 — поэтому зоны света совпадают с фотографией
+   точка в точку. Сдвиг кропа зажат так, что край кадра не отходит от края
+   блока ни при каком размере экрана. */
+.frame{position:absolute;top:0;left:0;
+       width:max(100cqw,177.7778cqh);height:max(56.25cqw,100cqh);
+       transform:translate(clamp(calc(100cqw - 100%),calc(50cqw - var(--fx,50%)),0px),
+                           clamp(calc(100cqh - 100%),calc(50cqh - var(--fy,50%)),0px))}
+.fc{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:fill}
+.lay{opacity:0;mix-blend-mode:plus-lighter;transition:opacity 1ms linear}
+
+.lay--room{--m:radial-gradient(ellipse 23% 33% at 27% 57%,#000 46%,transparent 100%),
+                radial-gradient(ellipse 23% 33% at 71% 57%,#000 46%,transparent 100%),
+                radial-gradient(ellipse 46% 8% at 50% 38%,#000 28%,transparent 100%)}
+.lay--bra{--m:radial-gradient(ellipse 8% 15% at 50.2% 56%,#000 22%,transparent 100%)}
+.lay--en{--m:radial-gradient(ellipse 17% 15% at 31.5% 27%,#000 30%,transparent 100%)}
+.lay--ar{--m:radial-gradient(ellipse 14% 14% at 70.5% 27%,#000 30%,transparent 100%)}
+.lay--out{--m:radial-gradient(ellipse 10% 16% at 4% 74%,#000 18%,transparent 100%),
+               radial-gradient(ellipse 10% 16% at 95% 73%,#000 18%,transparent 100%),
+               radial-gradient(ellipse 8% 12% at 78% 69%,#000 18%,transparent 100%)}
+.lay--room,.lay--bra,.lay--en,.lay--ar,.lay--out{
+  mask-image:var(--m);-webkit-mask-image:var(--m);
+  mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat;
+  mask-size:100% 100%;-webkit-mask-size:100% 100%}
+
+/* зажигание */
+.v.on .lay--room{opacity:1;transition:opacity 900ms var(--ease) 100ms}
+.v.on .lay--bra {opacity:1;transition:opacity 550ms var(--ease) 800ms}
+.v.on .lay--en  {opacity:1;transition:opacity 600ms var(--ease) 1150ms}
+.v.on .lay--ar  {opacity:1;transition:opacity 600ms var(--ease) 1550ms}
+.v.on .lay--out {opacity:1;transition:opacity 550ms var(--ease) 1800ms}
+.v.on .lay--amb {opacity:1;transition:opacity 550ms var(--ease) 1900ms}
+
+/* текст первого экрана — один приём появления на весь сайт */
+.ent{opacity:0;transform:translateY(16px)}
+.v.on .ent{opacity:1;transform:none;transition:opacity 600ms var(--ease) var(--d,350ms),transform 600ms var(--ease) var(--d,350ms)}
+
+/* страховка: что бы ни случилось с анимацией, через 3 секунды
+   экран обязан быть виден целиком */
+.v.done .lay{opacity:1!important;transition:none!important}
+.v.done .ent{opacity:1!important;transform:none!important;transition:none!important}
+
+@media (prefers-reduced-motion:reduce){
+  .lay{opacity:1!important;transition:none!important}
+  .ent{opacity:1!important;transform:none!important;transition:none!important}
+  *{scroll-behavior:auto!important}
+}
+
+/* ================================================================
+   ОБЩЕЕ ДЛЯ ВАРИАНТОВ
+   ================================================================ */
+.v{display:none;min-height:calc(100svh - var(--bar))}
+.v.live{display:block}
+.wrap{max-width:1280px;margin-inline:auto;padding-inline:var(--pad);width:100%}
+.rule{border:0;border-top:1px solid var(--line);margin:0}
+.on-dark .rule{border-color:rgba(128,130,106,.4)}
+
+/* ---------- 1. РАЗВОРОТ ---------------------------------------- */
+#v1{display:none}#v1.live{display:flex;flex-direction:column}
+#v1 .band{position:relative;height:clamp(260px,40svh,460px);flex:none}
+#v1 .below{flex:1;display:flex;align-items:center;padding-block:clamp(40px,5vh,72px)}
+#v1 .cols{display:grid;grid-template-columns:1.45fr 1fr;gap:64px;align-items:end}
+#v1 .display span{display:block}
+#v1 .facts{margin-top:32px}
+#v1 .right{display:flex;flex-direction:column;gap:24px;padding-bottom:6px}
+#v1 .rate{font-size:14px;color:var(--muted)}
+#v1 .rate b{font-family:var(--fd);font-weight:600;font-size:20px;color:var(--ink);margin-inline-end:6px}
+
+/* ---------- 2. ЛЕНТА ------------------------------------------- */
+/* У здания есть своя лента с именем. Страница отвечает ему такой же
+   лентой — кремовая полоса поперёк кадра. Фото видно и сверху, и снизу,
+   затемнения нет нигде: контраст даёт плашка, а не подложка. */
+#v2{position:relative}
+#v2 .facade{position:absolute;inset:0;height:100%}
+#v2 .stage{position:relative;z-index:3;min-height:calc(100svh - var(--bar));
+           display:flex;flex-direction:column;justify-content:flex-end;
+           padding-block:0 clamp(56px,15svh,150px)}
+#v2 .strip{background:var(--paper);padding-block:clamp(28px,4svh,40px)}
+#v2 .strip-in{display:flex;flex-wrap:wrap;gap:32px 48px;align-items:flex-end;justify-content:space-between}
+#v2 h1{max-width:17ch}
+#v2 .aside{display:flex;flex-direction:column;align-items:flex-start;gap:16px;padding-bottom:4px}
+#v2 .rate{font-size:14px;color:var(--muted)}
+#v2 .rate b{font-family:var(--fd);font-weight:600;font-size:20px;color:var(--ink);margin-inline-end:6px}
+
+/* ---------- 3. ВЫВЕСКА ----------------------------------------- */
+#v3{display:none}#v3.live{display:grid}
+#v3{grid-template-columns:46fr 54fr;min-height:calc(100svh - var(--bar))}
+#v3 .side{display:flex;flex-direction:column;background:var(--paper)}
+#v3 .side-in{flex:1;display:flex;flex-direction:column;justify-content:center;gap:32px;
+             padding:clamp(40px,6vh,80px) var(--pad)}
+#v3 .name{font-family:var(--fd);font-weight:700;font-size:clamp(56px,9vw,112px);line-height:.88;letter-spacing:-.03em;margin:0}
+#v3 .nameAr{font-size:clamp(34px,5vw,58px);margin:12px 0 0;color:var(--ink)}
+#v3 .kind{display:flex;gap:16px;align-items:baseline;font-size:14px;color:var(--muted);letter-spacing:.02em}
+#v3 .kind em{font-family:var(--fab);font-style:normal;direction:rtl}
+#v3 .facade{height:100%}
+
+/* ---------- 4. ПОЗДНИЙ ВЕЧЕР ----------------------------------- */
+#v4{display:none}#v4.live{display:flex;flex-direction:column}
+#v4{background:var(--olive-deep);color:var(--cream)}
+#v4 .stage{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,96px);
+           align-items:center;padding-block:clamp(48px,7vh,96px)}
+#v4 .display{color:var(--cream)}
+#v4 .lead{color:var(--cream-dim);margin-top:24px}
+#v4 .acts{margin-top:32px}
+#v4 .plate{position:relative}
+#v4 .facade{aspect-ratio:16/9;border-radius:var(--r-md);box-shadow:0 2px 6px rgba(20,19,11,.3),0 28px 64px rgba(20,19,11,.45)}
+#v4 .cap{margin-top:16px;font-size:14px;color:var(--cream-dim)}
+#v4 .facts{margin-top:48px}
+
+/* ---------- 5. ДВЕ ВЫВЕСКИ ------------------------------------- */
+#v5{display:none}#v5.live{display:flex;flex-direction:column}
+#v5 .top{flex:1;display:flex;align-items:center;padding-block:clamp(40px,6vh,80px)}
+#v5 .pair{display:grid;grid-template-columns:1fr 1px 1fr;gap:clamp(28px,4vw,56px);align-items:center;width:100%}
+#v5 .hairline{background:var(--line);align-self:stretch;margin-block:8px}
+#v5 .en{font-family:var(--fd);font-weight:700;font-size:clamp(34px,4.6vw,60px);line-height:.95;letter-spacing:-.02em;margin:0}
+#v5 .ar{font-size:clamp(30px,4.1vw,52px);margin:0;text-align:end}
+/* лента по вывеске: высота считается от ширины, иначе в ленту влезает
+   весь фасад и обрезки по вывеске не получается */
+#v5 .band{position:relative;height:clamp(96px,15vw,230px);flex:none}
+#v5 .foot{flex:none;padding-block:28px;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between}
+#v5 .foot .facts{flex:1;min-width:260px}
+
+/* ---------- 6. ПОЛНЫЙ КАДР ------------------------------------- */
+/* Кадр на всю высоту. Текст — компактным блоком в левом нижнем углу,
+   фасад и обе вывески остаются открытыми. Тень не растянута на пол-экрана,
+   а лежит пятном ровно под блоком: сам кадр она почти не трогает. */
+/* тёмный фон самой секции — чтобы кремовый текст не пропал,
+   если фотография почему-то не загрузится */
+#v6{position:relative;background:var(--olive-deep)}
+#v6 .facade{position:absolute;inset:0;height:100%}
+#v6 .wash{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse 90% 55% at 0% 100%,
+             rgba(26,24,15,.93) 0%,rgba(26,24,15,.88) 45%,rgba(26,24,15,.78) 70%,
+             rgba(26,24,15,.45) 85%,rgba(26,24,15,.15) 95%,transparent 100%)}
+[dir=rtl] #v6 .wash{transform:scaleX(-1)}
+#v6 .stage{position:relative;z-index:3;min-height:calc(100svh - var(--bar));
+           display:flex;align-items:flex-end;padding-block:0 clamp(40px,7svh,80px)}
+#v6 .col{max-width:400px}
+#v6 .over{color:var(--cream);margin-bottom:12px;width:fit-content}
+/* заголовок здесь идёт шагом H2: блок должен сидеть в углу и не лезть
+   на фасад, при 64px он дотягивался до горящего бра в середине кадра */
+#v6 .display{color:var(--cream);width:fit-content;font-size:clamp(28px,3.4vw,42px)}
+#v6 .lead{color:var(--cream-dim);margin-top:16px;font-size:16px;max-width:38ch}
+#v6 .acts{margin-top:24px}
+
+/* ================================================================
+   ПАНЕЛЬ ВЕЕРА — это инструмент выбора, на сайт она не попадёт
+   ================================================================ */
+.fan{position:fixed;inset-block-end:0;inset-inline:0;z-index:50;background:var(--olive-deep);color:var(--cream);
+     border-top:1px solid rgba(128,130,106,.45);min-height:var(--bar);display:flex;flex-direction:column;justify-content:center;
+     padding:12px var(--pad);gap:8px}
+.fan-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fan-row button{font-family:var(--fb);font-size:13px;font-weight:500;color:var(--cream-dim);
+        background:transparent;border:1px solid rgba(128,130,106,.5);border-radius:var(--r-pill);
+        padding:7px 16px;cursor:pointer;transition:all .2s var(--ease)}
+.fan-row button:hover{color:var(--cream);border-color:var(--sage)}
+.fan-row button[aria-pressed=true]{background:var(--cream);color:var(--olive-deep);border-color:var(--cream);font-weight:600}
+.fan-row .sp{flex:1}
+.fan-row .again{border-style:dashed}
+.fan-keys{margin:0;font-size:12.5px;line-height:1.55;color:var(--cream-dim);max-width:110ch}
+.fan-keys b{color:var(--cream);font-weight:600}
+.fan-hint{font-size:11.5px;color:rgba(232,216,184,.45)}
+
+@media (max-width:980px){
+  :root{--bar:128px}
+  .hdr nav{display:none}
+  #v1 .cols{grid-template-columns:1fr;gap:40px;align-items:start}
+  #v1 .right{padding-bottom:0}
+  #v3.live{grid-template-columns:1fr;grid-template-rows:auto auto}
+  #v3 .facade{order:-1;height:40svh;min-height:240px}
+  #v3 .side-in{gap:24px;padding-block:32px}
+  #v4 .stage{grid-template-columns:1fr;gap:24px;padding-block:clamp(32px,4vh,96px)}
+  #v4 .plate{order:-1}
+  #v4 .facade{aspect-ratio:16/9}
+  #v4 .cap{display:none}
+  #v4 .facts{margin-top:24px}
+  #v5 .pair{grid-template-columns:1fr;gap:20px}
+  #v5 .hairline{height:1px;width:100%;align-self:auto;margin:0}
+  #v5 .ar{text-align:start}
+  #v2 .display{max-width:none}
+  /* на узком экране текст лежит колонкой снизу — значит и сход должен
+     идти снизу вверх, а не от левого края */
+  #v6 .wash{background:linear-gradient(to top,rgba(26,24,15,.92) 0%,rgba(26,24,15,.88) 26%,
+            rgba(26,24,15,.76) 42%,rgba(26,24,15,.4) 56%,rgba(26,24,15,.1) 68%,transparent 78%)}
+  #v6 .col{max-width:none}
+  /* на телефоне две кнопки в ряд не помещаются и блок растёт в два этажа.
+     Вторая становится Ссылкой-стрелкой — компонент из той же системы */
+  #v6 .btn--secondary{border:0;padding:14px 0}
+  [dir=rtl] #v6 .wash{transform:none}
+  #v6 .lead{max-width:none}
+}
+@media (max-width:620px){
+  .fan-hint{display:none}
+  .fan-keys{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .hdr{gap:16px;padding-block:14px}
+  #v1 .band{height:34svh}
+  #v1 .display{font-size:36px}
+  #v1 .display span{display:inline}
+  #v2 .stage{padding-bottom:28px}
+  #v4 .facade{aspect-ratio:4/3}
+  #v5 .foot{padding-block:20px}
+  .fan{padding:10px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- один набор иконок на весь сайт: линия 1.6, концы скруглённые -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="ic-chev"><path d="M6 3.5 11.5 9 6 14.5"/></g>
+    <g id="ic-pin"><path d="M9 16s5.2-4.6 5.2-8.3A5.2 5.2 0 0 0 3.8 7.7C3.8 11.4 9 16 9 16Z"/><circle cx="9" cy="7.6" r="1.9"/></g>
+    <g id="ic-chat"><path d="M15.5 8.6c0 3.2-2.9 5.8-6.5 5.8-.8 0-1.6-.1-2.3-.4L2.5 15.5l1.4-3.6a5.5 5.5 0 0 1-1.4-3.3C2.5 5.4 5.4 2.8 9 2.8s6.5 2.6 6.5 5.8Z"/></g>
+    <g id="ic-clock"><circle cx="9" cy="9" r="6.5"/><path d="M9 5.4V9l2.6 1.6"/></g>
+  </defs>
+</svg>
+
+<main>
+
+<!-- ============================================================ 1 -->
+<section class="v" id="v1">
+  <div class="band facade" style="--fy:46%">
+    <header class="hdr hdr--photo on-photo">
+      <a class="brand" href="#"><b>SAVVA</b></a>
+      <nav><a href="#">Menu</a><a href="#">Atmosphere</a><a href="#">Find us</a></nav>
+      <span class="lang"><b>EN</b><i>/</i><em>عربي</em></span>
+    </header>
+  </div>
+
+  <div class="below">
+    <div class="wrap cols">
+      <div>
+        <p class="display ent" style="--d:300ms"><span>A day in savva</span> <span>is what you need</span> <span>to be savva.</span></p>
+        <ul class="facts ent" style="--d:520ms">
+          <li>Specialty coffee</li><li>Bir Uthman, Medina</li><li>Sat–Thu 06:30–02:00</li><li>Fri 13:00–02:00</li>
+        </ul>
+      </div>
+      <div class="right ent" style="--d:420ms">
+        <p class="lead">Specialty coffee under the olive trees of Bir Uthman, Medina. The light goes on at half past six and stays on until two at night.</p>
+        <div class="acts">
+          <a class="btn btn--primary" href="#"><svg class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+          <a class="alink" href="#"><u>See the menu</u><svg class="i i--s"><use href="#ic-chev"/></svg></a>
+        </div>
+        <p class="rate"><b>4.7</b>729 reviews on Google Maps</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 2 -->
+<section class="v" id="v2">
+  <div class="facade" style="--fy:42%">
+  </div>
+  <header class="hdr hdr--photo on-photo">
+    <a class="brand" href="#"><b>SAVVA</b></a>
+    <nav><a href="#">Menu</a><a href="#">Atmosphere</a><a href="#">Find us</a></nav>
+    <span class="lang"><b>EN</b><i>/</i><em>عربي</em></span>
+  </header>
+
+  <div class="stage">
+    <div class="strip ent" style="--d:1700ms">
+      <div class="wrap strip-in">
+        <h1>Stay a while.<br>The light is on.</h1>
+        <div class="aside">
+          <p class="rate"><b>4.7</b>729 reviews on Google Maps</p>
+          <div class="acts">
+            <a class="btn btn--primary" href="#"><svg class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+            <a class="alink" href="#"><u>See the menu</u><svg class="i i--s"><use href="#ic-chev"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 3 -->
+<section class="v" id="v3">
+  <div class="side">
+    <header class="hdr hdr--paper">
+      <a class="brand" href="#"><b>SAVVA</b></a>
+      <span class="lang" style="margin-inline-start:auto"><b>EN</b><i>/</i><em>عربي</em></span>
+    </header>
+    <div class="side-in">
+      <div class="ent" style="--d:300ms">
+        <p class="name">SAVVA</p>
+        <p class="nameAr ar-d">سافا</p>
+      </div>
+      <hr class="rule ent" style="--d:420ms">
+      <div class="ent" style="--d:480ms">
+        <p class="kind">Specialty coffee <em>قهوة مختصة</em></p>
+        <p class="lead" style="margin-top:16px">Bir Uthman, Medina. Open from half past six in the morning until two at night, every day but Friday.</p>
+      </div>
+      <div class="acts ent" style="--d:620ms">
+        <a class="btn btn--primary" href="#"><svg class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+        <a class="alink" href="#"><u>See the menu</u><svg class="i i--s"><use href="#ic-chev"/></svg></a>
+      </div>
+      <ul class="facts ent" style="--d:740ms">
+        <li>Sat–Thu 06:30–02:00</li><li>Fri 13:00–02:00</li><li>4.7 / 729 reviews</li>
+      </ul>
+    </div>
+  </div>
+  <div class="facade" style="--fx:37%;--fy:48%" data-alt="Фасад кофейни SAVVA вечером: горящая вывеска и витрина">
+  </div>
+</section>
+
+<!-- ============================================================ 4 -->
+<section class="v on-dark" id="v4">
+  <header class="hdr hdr--olive">
+    <a class="brand" href="#"><b>SAVVA</b></a>
+    <nav><a href="#">Menu</a><a href="#">Atmosphere</a><a href="#">Find us</a></nav>
+    <span class="lang"><b>EN</b><i>/</i><em>عربي</em></span>
+  </header>
+  <div class="wrap stage">
+    <div>
+      <p class="display ent" style="--d:300ms">Open from half<br>past six until<br>two at night.</p>
+      <p class="lead ent" style="--d:460ms">The windows come on first, then the sign. Specialty coffee in Bir Uthman, Medina: the same light every evening.</p>
+      <div class="acts ent" style="--d:600ms">
+        <a class="btn btn--primary" href="#"><svg class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+        <a class="btn btn--secondary" href="#"><svg class="i i--s"><use href="#ic-chat"/></svg>WhatsApp</a>
+      </div>
+      <ul class="facts ent" style="--d:720ms">
+        <li>Specialty coffee</li><li>Zubairah Al Roumiah, Madinah 42331</li><li>Sat–Thu 06:30–02:00</li><li>Fri 13:00–02:00</li><li>4.7 / 729 reviews</li>
+      </ul>
+    </div>
+    <div class="plate ent" style="--d:380ms">
+      <div class="facade" style="--fy:48%">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 5 -->
+<section class="v" id="v5">
+  <header class="hdr hdr--paper">
+    <a class="brand" href="#"><b>SAVVA</b></a>
+    <nav><a href="#">Menu</a><a href="#">Atmosphere</a><a href="#">Find us</a></nav>
+    <span class="lang"><b>EN</b><i>/</i><em>عربي</em></span>
+  </header>
+
+  <div class="top">
+    <div class="wrap pair">
+      <p class="en ent" style="--d:300ms">Specialty coffee<br>in Bir Uthman</p>
+      <div class="hairline ent" style="--d:420ms"></div>
+      <p class="ar ar-d ent" style="--d:360ms">قهوة مختصة<br>في بئر عثمان</p>
+    </div>
+  </div>
+
+  <div class="band facade" style="--fy:24%" data-alt="Вывеска SAVVA и سافا на фасаде кофейни">
+  </div>
+
+  <div class="wrap foot">
+    <ul class="facts ent" style="--d:1700ms">
+      <li>Zubairah Al Roumiah, Madinah 42331</li><li>Sat–Thu 06:30–02:00</li><li>Fri 13:00–02:00</li><li>4.7 / 729 reviews</li>
+    </ul>
+    <div class="acts ent" style="--d:1850ms">
+      <a class="btn btn--primary" href="#"><svg class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+      <a class="alink" href="#"><u>See the menu</u><svg class="i i--s"><use href="#ic-chev"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 6 -->
+<section class="v" id="v6">
+  <div class="facade" style="--fy:46%"></div>
+  <span class="wash"></span>
+  <header class="hdr hdr--photo on-photo">
+    <a class="brand" href="#"><b>SAVVA</b></a>
+    <nav><a href="#">Menu</a><a href="#">Atmosphere</a><a href="#">Find us</a></nav>
+    <span class="lang"><b>EN</b><i>/</i><em>عربي</em></span>
+  </header>
+
+  <div class="stage">
+    <div class="wrap">
+      <div class="col">
+        <p class="over ent" style="--d:1500ms">Bir Uthman, Medina</p>
+        <p class="display ent" style="--d:1600ms">A day in savva<br>is what you need<br>to be savva.</p>
+        <p class="lead ent" style="--d:1750ms">Specialty coffee under the olive trees. Open from half past six in the morning until two at night.</p>
+        <div class="acts ent" style="--d:1900ms">
+          <a class="btn btn--primary" href="#"><svg class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+          <a class="btn btn--secondary" href="#">View the menu<svg class="i i--s"><use href="#ic-chev"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ПАНЕЛЬ ВЕЕРА -->
+<div class="fan">
+  <div class="fan-row" role="group" aria-label="Варианты первого экрана">
+    <button type="button" data-n="1">1 · Разворот</button>
+    <button type="button" data-n="2">2 · Лента</button>
+    <button type="button" data-n="3">3 · Вывеска</button>
+    <button type="button" data-n="4">4 · Поздний вечер</button>
+    <button type="button" data-n="5">5 · Две вывески</button>
+    <button type="button" data-n="6">6 · Полный кадр</button>
+    <span class="sp"></span>
+    <button type="button" class="again" id="again">Повторить свет</button>
+  </div>
+  <p class="fan-keys" id="keys"></p>
+  <p class="fan-hint">Цифры 1–6 на клавиатуре переключают. Фасад загорается сам: витрина → бра → SAVVA → سافا → свечи, 2.4 секунды. Эта панель — инструмент выбора, на сайт она не попадёт.</p>
+</div>
+
+<script>
+/* Слои света собираем скриптом, чтобы не плодить одинаковую разметку.
+   Два файла на все кадры: погашенный фасад и чистый свет.
+   Зоны включаются по очереди — это и есть «загорается само». */
+const OFF = 'assets/hero-off.webp', LIGHT = 'assets/hero-light.webp';
+const ZONES = ['room', 'bra', 'en', 'ar', 'out', 'amb'];
+document.querySelectorAll('.facade').forEach(f => {
+  const frame = document.createElement('div');
+  frame.className = 'frame';
+  frame.innerHTML =
+    '<img class="fc" src="' + OFF + '" width="1280" height="720" alt="' +
+      (f.dataset.alt || 'Фасад кофейни SAVVA, Бир Усман, Медина') + '">' +
+    ZONES.map(z => '<img class="fc lay lay--' + z + '" src="' + LIGHT +
+                   '" alt="" aria-hidden="true">').join('');
+  f.prepend(frame);
+});
+
+const KEYS = {
+ 1:["Разворот","журнальный разворот · фото-полоса во всю ширину · заголовок под кадром на кремовой бумаге · собственная фраза кофейни вместо лозунга · строка фактов через слэш · две колонки разного веса · воздух вместо украшений"],
+ 2:["Лента","фото во всю высоту без затемнения · кремовая лента поперёк кадра · у здания своя лента с именем — страница отвечает такой же · фасад виден и сверху, и снизу · контраст даёт плашка, а не затемнение · заголовок и действие в одной строке"],
+ 3:["Вывеска","вертикальный раскол экрана · имя кофейни вместо заголовка · насх под антиквой равного веса · портретный кадр с горящей вывеской · золото только как свечение · тонкая линия вместо украшений"],
+ 4:["Поздний вечер","тёмный оливковый разворот как первый экран · кадр-вклейка с одной тёплой тенью · часы работы вместо лозунга · кремовая типографика на оливе · золото в свечении вывески · тишина и воздух"],
+ 5:["Две вывески","два языка равного веса · кадр обрезан по вывеске узкой лентой · насх и антиква в паре · волосяная линия вместо разделителя · бумага и один горящий кадр · факты строкой, действие справа"],
+ 6:["Полный кадр","кадр на всю высоту · заголовок и обе кнопки прямо по фотографии слева · тёплый сход от левого края вместо затемнения всего фото · надзаголовок капсом · шапка оливковой лентой, как фриз на самом фасаде · ближе всего к твоему скриншоту"]
+};
+const btns = [...document.querySelectorAll('.fan-row button[data-n]')];
+const keys = document.getElementById('keys');
+let cur = 1, guard;
+
+function show(n){
+  cur = n;
+  clearTimeout(guard);
+  document.querySelectorAll('.v').forEach(s => s.classList.remove('on', 'live', 'done'));
+  btns.forEach(b => b.setAttribute('aria-pressed', b.dataset.n === String(n)));
+  keys.innerHTML = '<b>' + KEYS[n][0] + '</b> — ' + KEYS[n][1];
+  const sec = document.getElementById('v' + n);
+  sec.classList.add('live');
+  void sec.offsetHeight;          // пересчёт до 'on', иначе переходу не от чего стартовать
+  sec.classList.add('on');
+  guard = setTimeout(() => sec.classList.add('done'), 3000);
+  window.scrollTo(0, 0);
+}
+// высота панели реальная, чтобы она ничего не перекрывала
+const fan = document.querySelector('.fan');
+new ResizeObserver(() => document.documentElement.style
+  .setProperty('--bar', Math.ceil(fan.getBoundingClientRect().height) + 'px')).observe(fan);
+
+btns.forEach(b => b.addEventListener('click', () => show(+b.dataset.n)));
+document.getElementById('again').addEventListener('click', () => show(cur));
+document.addEventListener('keydown', e => { if (/^[1-6]$/.test(e.key)) show(+e.key); });
+show(1);
+</script>
+</body>
+</html>
