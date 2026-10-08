@@ -7,6 +7,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<!-- кадры фасада грузим сразу, не дожидаясь скрипта в конце страницы.
+     Условия те же, что в скрипте: высокий экран — вертикальный набор -->
+<link rel="preload" as="image" href="assets/facade-off.webp" media="(min-aspect-ratio:1001/1000) and (prefers-reduced-motion:no-preference)" fetchpriority="high">
+<link rel="preload" as="image" href="assets/facade-on.webp" media="(min-aspect-ratio:1001/1000)">
+<link rel="preload" as="image" href="assets/facade-off-m.webp" media="(max-aspect-ratio:1/1) and (prefers-reduced-motion:no-preference)" fetchpriority="high">
+<link rel="preload" as="image" href="assets/facade-on-m.webp" media="(max-aspect-ratio:1/1)">
 <style>
 /* ================================================================
    ТОКЕНЫ — целиком из design-system.md, ни одного нового значения
@@ -114,54 +120,43 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stro
 svg.i--s{width:15px;height:15px;stroke-width:1.92}   /* 1.6px на сетке 18, поэтому при 15px линию утолщаем, чтобы осталась 1.6 */
 
 /* ================================================================
-   ФАСАД, КОТОРЫЙ ЗАГОРАЕТСЯ САМ
-   Два кадра, оба сделаны из одного исходного: `hero-off.webp` — свет
-   выключен, `hero-light.webp` — чистый свет (горящий кадр минус погашенный).
-   Свет не «проявляется», а ДОБАВЛЯЕТСЯ поверх тёмного фасада зонами —
-   поэтому форма свечения настоящая, а не овальное пятно.
-
-   Как сделаны файлы (ffmpeg, из materials/hero/photo_1_...jpg):
-   1) погашенный кадр —
-      -vf "curves=all='0/0 0.22/0.075 0.45/0.135 0.7/0.195 1/0.26',
-           eq=saturation=0.5:gamma=1.02,
-           colorchannelmixer=.94:.03:0:0:.02:.96:0:0:0:.02:.80"
-   2) чистый свет — вычитание, обязательно в RGB, иначе уходит в зелень:
-      -filter_complex "[0:v]format=gbrp[a];[1:v]format=gbrp[b];
-                       [a][b]blend=all_mode=subtract,format=yuvj420p"
-   Порядок: зал → бра → SAVVA → سافا → уличные лампы → общий свет. 2.45 с.
+   ФАСАД, КОТОРЫЙ ЗАГОРАЕТСЯ САМ (переделано 8 октября)
+   Два набора кадров: 16:9 для широких экранов и вертикальный для телефона.
+   В каждом наборе пара, снятая «с одного штатива»:
+     facade-off  — тот же фасад, свет выключен (сгенерирован из горящего кадра
+                   и выровнен по пикселям: компьютер — сдвиг 0.5 px,
+                   телефон — плавная растяжка до 2.5 px книзу);
+     facade-on   — горящий кадр, оригинал без изменений.
+   Поверх погашенного кадра лежат копии ГОРЯЩЕГО под масками зон, смешивание
+   обычное. Поэтому свет ничем не «прибавляется» дважды, а в конце на экране
+   ровно оригинал. Маски (facade-room/bra/en/ar/out) посчитаны из разницы
+   «горит минус погашено», а не нарисованы: форма света — форма настоящих ламп.
+   Порядок: зал → бра → SAVVA (с коротким миганием) → سافا → уличные → общий
+   свет, около 2.6 с. Исходники и скрипты: materials/hero/ (A, B, C, scripts).
    ================================================================ */
 .facade{position:relative;overflow:hidden;background:#15140D;container-type:size}
-/* кадр всегда ровно 16:9 — поэтому зоны света совпадают с фотографией
-   точка в точку. Сдвиг кропа зажат так, что край кадра не отходит от края
-   блока ни при каком размере экрана. */
+/* кадр держит свою пропорцию (--ar ставит скрипт), поэтому маски совпадают
+   с фотографией точка в точку. Сдвиг кропа зажат так, что край кадра
+   не отходит от края блока ни при каком размере экрана. */
 .frame{position:absolute;top:0;left:0;
-       width:max(100cqw,177.7778cqh);height:max(56.25cqw,100cqh);
+       width:calc(max(100cqw,calc(100cqh * var(--ar))) * var(--zoom,1));
+       height:calc(max(calc(100cqw / var(--ar)),100cqh) * var(--zoom,1));
        transform:translate(clamp(calc(100cqw - 100%),calc(50cqw - var(--fx,50%)),0px),
                            clamp(calc(100cqh - 100%),calc(50cqh - var(--fy,50%)),0px))}
 .fc{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:fill}
-.lay{opacity:0;mix-blend-mode:plus-lighter;transition:opacity 1ms linear}
+.lay{opacity:0;-webkit-mask-size:100% 100%;mask-size:100% 100%;
+     -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 
-.lay--room{--m:radial-gradient(ellipse 23% 33% at 27% 57%,#000 46%,transparent 100%),
-                radial-gradient(ellipse 23% 33% at 71% 57%,#000 46%,transparent 100%),
-                radial-gradient(ellipse 46% 8% at 50% 38%,#000 28%,transparent 100%)}
-.lay--bra{--m:radial-gradient(ellipse 8% 15% at 50.2% 56%,#000 22%,transparent 100%)}
-.lay--en{--m:radial-gradient(ellipse 17% 15% at 31.5% 27%,#000 30%,transparent 100%)}
-.lay--ar{--m:radial-gradient(ellipse 14% 14% at 70.5% 27%,#000 30%,transparent 100%)}
-.lay--out{--m:radial-gradient(ellipse 10% 16% at 4% 74%,#000 18%,transparent 100%),
-               radial-gradient(ellipse 10% 16% at 95% 73%,#000 18%,transparent 100%),
-               radial-gradient(ellipse 8% 12% at 78% 69%,#000 18%,transparent 100%)}
-.lay--room,.lay--bra,.lay--en,.lay--ar,.lay--out{
-  mask-image:var(--m);-webkit-mask-image:var(--m);
-  mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat;
-  mask-size:100% 100%;-webkit-mask-size:100% 100%}
-
-/* зажигание */
-.v.on .lay--room{opacity:1;transition:opacity 900ms var(--ease) 100ms}
-.v.on .lay--bra {opacity:1;transition:opacity 550ms var(--ease) 800ms}
-.v.on .lay--en  {opacity:1;transition:opacity 600ms var(--ease) 1150ms}
-.v.on .lay--ar  {opacity:1;transition:opacity 600ms var(--ease) 1550ms}
-.v.on .lay--out {opacity:1;transition:opacity 550ms var(--ease) 1800ms}
-.v.on .lay--amb {opacity:1;transition:opacity 550ms var(--ease) 1900ms}
+/* лампа не «проявляется», а вспыхивает и чуть дозревает */
+@keyframes lamp{from{opacity:0}to{opacity:1}}
+/* вывеска при включении один раз коротко моргает */
+@keyframes sign{0%{opacity:0}16%{opacity:.8}26%{opacity:.3}42%,100%{opacity:1}}
+.v.on .lay--room{animation:lamp 700ms cubic-bezier(.2,.7,.3,1) 150ms both}
+.v.on .lay--bra {animation:lamp 450ms cubic-bezier(.2,.7,.3,1) 700ms both}
+.v.on .lay--en  {animation:sign 750ms linear 1000ms both}
+.v.on .lay--ar  {animation:lamp 500ms cubic-bezier(.2,.7,.3,1) 1450ms both}
+.v.on .lay--out {animation:lamp 500ms cubic-bezier(.2,.7,.3,1) 1750ms both}
+.v.on .lay--all {animation:lamp 800ms ease-in-out 1850ms both}
 
 /* текст первого экрана — один приём появления на весь сайт */
 .ent{opacity:0;transform:translateY(16px)}
@@ -169,11 +164,11 @@ svg.i--s{width:15px;height:15px;stroke-width:1.92}   /* 1.6px на сетке 18
 
 /* страховка: что бы ни случилось с анимацией, через 3 секунды
    экран обязан быть виден целиком */
-.v.done .lay{opacity:1!important;transition:none!important}
+.v.done .lay{opacity:1!important;animation:none!important}
 .v.done .ent{opacity:1!important;transform:none!important;transition:none!important}
 
 @media (prefers-reduced-motion:reduce){
-  .lay{opacity:1!important;transition:none!important}
+  .lay{opacity:1!important;animation:none!important}
   .ent{opacity:1!important;transform:none!important;transition:none!important}
   *{scroll-behavior:auto!important}
 }
@@ -228,6 +223,12 @@ svg.i--s{width:15px;height:15px;stroke-width:1.92}   /* 1.6px на сетке 18
   [dir=rtl] #v6 .wash{transform:none}
   #v6 .lead{max-width:none}
 }
+/* вертикальный кадр (телефон стоя): фасад целиком в верхней половине,
+   текст на тротуаре. Кадр чуть крупнее и сдвинут вверх, чтобы между окнами
+   и текстом остался воздух; сход начинается ниже окон и фасад не трогает */
+#v6.tall .frame{--zoom:1.12;--fy:55%}
+#v6.tall .wash{background:linear-gradient(to top,rgba(26,24,15,.9) 0%,rgba(26,24,15,.86) 30%,
+          rgba(26,24,15,.7) 40%,rgba(26,24,15,.35) 47%,transparent 55%)}
 @media (max-width:620px){
   .hdr{gap:16px;padding-block:14px}
 }
@@ -641,20 +642,31 @@ html.anim .sec[data-anim=words] .slot--photo.a-in img{transform:none;transition:
 
 <script>
 /* Слои света собираем скриптом, чтобы не плодить одинаковую разметку.
-   Два файла на все кадры: погашенный фасад и чистый свет.
-   Зоны включаются по очереди — это и есть «загорается само». */
-const OFF = 'assets/hero-off.webp', LIGHT = 'assets/hero-light.webp';
-const ZONES = ['room', 'bra', 'en', 'ar', 'out', 'amb'];
-document.querySelectorAll('.facade').forEach(f => {
-  const frame = document.createElement('div');
-  frame.className = 'frame';
-  frame.innerHTML =
-    '<img class="fc" src="' + OFF + '" width="1280" height="720" alt="' +
-      (f.dataset.alt || 'Фасад кофейни SAVVA, Бир Усман, Медина') + '">' +
-    ZONES.map(z => '<img class="fc lay lay--' + z + '" src="' + LIGHT +
-                   '" alt="" aria-hidden="true">').join('');
-  f.prepend(frame);
-});
+   Узкий высокий экран (телефон стоя) получает вертикальный набор кадров,
+   остальные — 16:9. Повернули телефон или сузили окно — набор меняется. */
+const TALL = matchMedia('(max-aspect-ratio:1/1)');
+const STILL = matchMedia('(prefers-reduced-motion:reduce)').matches;
+const ZONES = ['room', 'bra', 'en', 'ar', 'out'];
+const src = n => 'assets/facade-' + n + (TALL.matches ? '-m' : '') + '.webp';
+const facade = document.querySelector('#v6 .facade');
+const frame = document.createElement('div');
+frame.className = 'frame';
+facade.prepend(frame);
+function buildFacade() {
+  const [w, h] = TALL.matches ? [714, 1280] : [1280, 714];
+  const alt = 'SAVVA coffee shop facade in the evening, Bir Uthman, Madinah';
+  frame.style.setProperty('--ar', w / h);
+  facade.parentElement.classList.toggle('tall', TALL.matches);
+  // при «уменьшить движение» сразу горящий кадр, без тёмного и без масок
+  frame.innerHTML = STILL
+    ? '<img class="fc" src="' + src('on') + '" width="' + w + '" height="' + h + '" alt="' + alt + '">'
+    : '<img class="fc" src="' + src('off') + '" width="' + w + '" height="' + h + '" alt="' + alt + '">' +
+      ZONES.map(z => '<img class="fc lay lay--' + z + '" src="' + src('on') + '" alt="" aria-hidden="true" ' +
+        'style="-webkit-mask-image:url(' + src(z) + ');mask-image:url(' + src(z) + ')">').join('') +
+      '<img class="fc lay lay--all" src="' + src('on') + '" alt="" aria-hidden="true">';
+}
+buildFacade();
+TALL.addEventListener('change', buildFacade);
 
 /* ---------- МЕНЮ: один массив на все три варианта ----------
    Перенесён дословно из ..\SAVVA-demo\assets\js\menu.js (40 позиций).
@@ -739,9 +751,20 @@ const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.
 document.querySelectorAll('.rv').forEach(el => io ? io.observe(el) : el.classList.add('in'));
 
 /* ---------- Свет зажигается сам при открытии ---------- */
+/* Старт только когда погашенный кадр, горящий и маски уже в памяти —
+   иначе свет «включится», пока картинки ещё грузятся, и фасад мигнёт.
+   Сеть медленная (дольше 2.5 с) — показываем горящий фасад сразу. */
 const hero = document.getElementById('v6');
-hero.classList.add('live', 'on');
-setTimeout(() => hero.classList.add('done'), 3000);   // страховка: через 3 секунды экран обязан быть виден целиком
+hero.classList.add('live');
+const loads = STILL ? [] : ['off', 'on', ...ZONES].map(n => { const i = new Image(); i.src = src(n); return i.decode().catch(() => {}); });
+Promise.race([
+  Promise.all(loads).then(() => true),
+  new Promise(r => setTimeout(() => r(false), 2500))
+]).then(ok => {
+  hero.classList.add('on');
+  if (!ok) hero.classList.add('done');
+  setTimeout(() => hero.classList.add('done'), 3200);   // страховка: экран обязан стать виден целиком
+});
 /* ---------- Анимации экранов (см. блок АНИМАЦИИ ЭКРАНОВ в стилях) ---------- */
 if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
   const secs = [...document.querySelectorAll('.sec[data-anim]')];
