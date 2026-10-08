@@ -380,6 +380,50 @@ html:has(dialog[open]){overflow:hidden}
   .cta .btn{width:100%;justify-content:center}
   .cta .alink{margin-top:8px}
 }
+/* ================== АНИМАЦИИ ЭКРАНОВ ==================
+   Три приёма, выбраны заказчиком 8 октября. Включаются атрибутом data-anim на секции:
+   words (Место, Вечером), float (Ремесло, Меню), curtain (Как внутри). «Как нас найти» без нового приёма.
+   Класс html.anim ставит скрипт и только если в системе НЕ включено «уменьшить движение». */
+/* общее: свой механизм появления вместо .rv */
+html.anim .sec[data-anim] .rv{opacity:1;transform:none;transition:none}
+html.anim .sec[data-anim] .av>*{will-change:opacity,transform}
+html.anim .sec[data-anim] .lists .row{opacity:0}
+html.anim .sec[data-anim] .lists.a-in .row{opacity:1}
+html.anim .sec[data-anim] .slot--photo{opacity:0}
+html.anim .sec[data-anim] .slot--photo.a-in{opacity:1}
+
+/* ---------- 1. ВСПЛЫТИЕ ---------- */
+html.anim .sec[data-anim=float] .av>*:not(.lists){opacity:0;transform:translateY(28px);filter:blur(6px)}
+html.anim .sec[data-anim=float] .av.a-in>*:not(.lists){opacity:1;transform:none;filter:none;
+  transition:opacity 1100ms var(--ease) calc(var(--k,0)*110ms),transform 1100ms var(--ease) calc(var(--k,0)*110ms),filter 1100ms var(--ease) calc(var(--k,0)*110ms)}
+html.anim .sec[data-anim=float] .lists .row{transform:translateY(14px)}
+html.anim .sec[data-anim=float] .lists.a-in .row{transform:none;transition:opacity 800ms var(--ease) calc(var(--i,0)*70ms),transform 800ms var(--ease) calc(var(--i,0)*70ms)}
+html.anim .sec[data-anim=float] .slot--photo{transform:translateY(48px) scale(.96);filter:blur(10px)}
+html.anim .sec[data-anim=float] .slot--photo.a-in{transform:none;filter:none;transition:opacity 1400ms var(--ease),transform 1600ms var(--ease),filter 1400ms var(--ease)}
+
+/* ---------- 2. ШТОРКА ---------- */
+html.anim .sec[data-anim=curtain] .slot--photo{position:relative;opacity:1}
+html.anim .sec[data-anim=curtain] .slot--photo::after{content:"";position:absolute;inset:-1px;z-index:2;background:var(--paper);transform-origin:bottom}
+html.anim .sec[data-anim=curtain] .slot--photo.a-in::after{transform:scaleY(0);transition:transform 1300ms cubic-bezier(.77,0,.18,1)}
+html.anim .sec[data-anim=curtain] .slot--photo img{transform:scale(1.28)}
+html.anim .sec[data-anim=curtain] .slot--photo.a-in img{transform:none;transition:transform 2000ms var(--ease)}
+html.anim .sec[data-anim=curtain] .av>*:not(.lists){opacity:0;transform:translateY(22px)}
+html.anim .sec[data-anim=curtain] .av.a-in>*:not(.lists){opacity:1;transform:none;
+  transition:opacity 900ms var(--ease) calc(150ms + var(--k,0)*100ms),transform 900ms var(--ease) calc(150ms + var(--k,0)*100ms)}
+html.anim .sec[data-anim=curtain] .lists .row{transform:translateX(-20px)}
+html.anim .sec[data-anim=curtain] .lists.a-in .row{transform:none;transition:opacity 700ms var(--ease) calc(var(--i,0)*60ms),transform 700ms var(--ease) calc(var(--i,0)*60ms)}
+
+/* ---------- 3. СЛОВА ---------- */
+html.anim .sec[data-anim=words] .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.16em;margin-bottom:-.16em}
+html.anim .sec[data-anim=words] .w>span{display:inline-block;transform:translateY(118%)}
+html.anim .sec[data-anim=words] .av.a-in .w>span{transform:none;transition:transform 1000ms var(--ease) calc(80ms + var(--wi,0)*85ms)}
+html.anim .sec[data-anim=words] .av>*:not(h2):not(.lists){opacity:0}
+html.anim .sec[data-anim=words] .av.a-in>*:not(h2):not(.lists){opacity:1;transition:opacity 1000ms ease calc(400ms + var(--k,0)*100ms)}
+html.anim .sec[data-anim=words] .lists.a-in .row{transition:opacity 800ms ease calc(300ms + var(--i,0)*60ms)}
+html.anim .sec[data-anim=words] .slot--photo img{transform:scale(1.22)}
+html.anim .sec[data-anim=words] .slot--photo.a-in{transition:opacity 900ms ease}
+html.anim .sec[data-anim=words] .slot--photo.a-in img{transform:none;transition:transform 2600ms cubic-bezier(.16,1,.3,1)}
+
 </style>
 </head>
 <body>
@@ -426,7 +470,7 @@ html:has(dialog[open]){overflow:hidden}
 <div class="body live" id="b1">
 
   <!-- Место -->
-  <section class="sec sec--paper">
+  <section class="sec sec--paper" data-anim="words">
     <div class="wrap">
       <div class="place">
         <div class="rv">
@@ -444,7 +488,7 @@ html:has(dialog[open]){overflow:hidden}
   </section>
 
   <!-- Ремесло: олива -->
-  <section class="sec sec--olive on-dark">
+  <section class="sec sec--olive on-dark" data-anim="float">
     <div class="wrap">
       <div class="craft">
         <div class="rv">
@@ -458,7 +502,7 @@ html:has(dialog[open]){overflow:hidden}
   </section>
 
   <!-- Меню: основные позиции, без закладок. Все 40 лежат в панели по кнопке -->
-  <section class="sec sec--paper" id="menu1">
+  <section class="sec sec--paper" id="menu1" data-anim="float">
     <div class="wrap">
       <div class="menu-head rv">
         <div>
@@ -485,7 +529,7 @@ html:has(dialog[open]){overflow:hidden}
   </section>
 
   <!-- Вечером: олива, десерты крупно. Единственное круглое кадрирование на странице -->
-  <section class="sec sec--olive on-dark">
+  <section class="sec sec--olive on-dark" data-anim="words">
     <div class="wrap">
       <div class="eve">
         <div class="slot slot--photo slot--round"><img src="фото савва/dessert.jpg" width="1093" height="1093" loading="lazy" alt="A glazed pecan pastry on a plate, seen from above"></div>
@@ -499,7 +543,7 @@ html:has(dialog[open]){overflow:hidden}
   </section>
 
   <!-- Как внутри: два прямоугольных кадра, без списка -->
-  <section class="sec sec--paper" id="inside">
+  <section class="sec sec--paper" id="inside" data-anim="curtain">
     <div class="wrap">
       <div class="in-head rv">
         <h2>Where everyone sits a little longer.</h2>
@@ -698,6 +742,33 @@ document.querySelectorAll('.rv').forEach(el => io ? io.observe(el) : el.classLis
 const hero = document.getElementById('v6');
 hero.classList.add('live', 'on');
 setTimeout(() => hero.classList.add('done'), 3000);   // страховка: через 3 секунды экран обязан быть виден целиком
+/* ---------- Анимации экранов (см. блок АНИМАЦИИ ЭКРАНОВ в стилях) ---------- */
+if (!matchMedia('(prefers-reduced-motion:reduce)').matches) {
+  const secs = [...document.querySelectorAll('.sec[data-anim]')];
+  const targets = [];
+  secs.forEach(sec => {
+    sec.querySelectorAll('.rv,.picks>div,.menu-cta').forEach(el => {
+      el.classList.add('av');
+      [...el.children].forEach((c, i) => c.style.setProperty('--k', i));
+      targets.push(el);
+    });
+    sec.querySelectorAll('.lists').forEach(l => {
+      [...l.children].forEach((r, i) => r.style.setProperty('--i', i));
+      targets.push(l);
+    });
+    sec.querySelectorAll('.slot--photo').forEach(p => targets.push(p));
+    if (sec.dataset.anim === 'words') sec.querySelectorAll('h2').forEach(h => {
+      const t = h.textContent.trim().split(/\s+/);
+      h.setAttribute('aria-label', t.join(' '));
+      h.innerHTML = t.map((w, i) => '<span class="w" aria-hidden="true" style="--wi:' + i + '"><span>' + w + '</span></span>').join(' ');
+    });
+  });
+  const aio = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('a-in'); aio.unobserve(e.target); }
+  }), { rootMargin: '0px 0px -8% 0px' });
+  document.documentElement.classList.add('anim');
+  targets.forEach(t => aio.observe(t));
+}
 </script>
 </body>
 </html>
