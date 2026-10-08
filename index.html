@@ -14,12 +14,12 @@
 :root{
   --paper:#FAF6EC; --paper-2:#F2EADA;
   --ink:#403D27; --muted:#6B6650; --line:#DFD6C0;
-  /* Олива переведена на оттенок логотипа (круг = #808368) и осветлена.
+  /* Олива переведена на оттенок логотипа (круг = #808368) и осветлена до предела:
+     светлее кремовый текст перестаёт читаться. Выбрано заказчиком 7 октября.
      --olive-deep: фон тёмных секций и подвал. --olive: производный, темнее —
-     плитки, места под фото, кнопки, кружки иконок. Значения «средний»; «светлый
-     предел» включается атрибутом html[data-olive=light] (временный показ заказчику). */
-  --olive-deep:#4C4A30; --olive:#3B3A25; --sage:#80826A;
-  --cream:#E8D8B8; --cream-dim:rgba(232,216,184,.80);
+     плитки, места под фото, кнопки, кружки иконок. */
+  --olive-deep:#5A5B45; --olive:#464736; --sage:#80826A;
+  --cream:#E8D8B8; --cream-dim:rgba(232,216,184,.95);
   --line-olive:rgba(232,216,184,.28);   /* линии на оливе: тот же крем, но прозрачнее */
   --gold:#C9A765;
   --r-sm:8px; --r-md:14px; --r-pill:999px;
@@ -42,7 +42,6 @@ body{margin:0;padding-block-end:var(--bar);background:var(--paper);color:var(--i
 ::selection{background:rgba(201,167,101,.38);color:var(--ink)}
 :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:var(--r-sm)}
 html{scrollbar-color:var(--sage) var(--paper-2)}
-html[data-olive=light]{--olive-deep:#5A5B45;--olive:#464736;--cream-dim:rgba(232,216,184,.95)}
 
 /* ================================================================
    ТИПОГРАФИКА — шкала из раздела 3 дизайн-системы
@@ -270,6 +269,9 @@ svg.i--s{width:15px;height:15px;stroke-width:1.92}   /* 1.6px на сетке 18
 .sec--olive .slot{background:var(--olive);border-color:rgba(232,216,184,.4);color:var(--cream)}
 .slot--band{border-radius:0;border-inline:0;padding:0}   /* кадр во всю ширину: отступов внутри нет */
 .slot--round{border-radius:50%;--ar:1/1}
+/* Фото внутри прежней рамки: файл не меняется, рамка его только показывает */
+.slot--photo{padding:0;border:0;overflow:hidden;display:block;background:none}
+.slot--photo img{display:block;width:100%;height:100%;object-fit:cover}
 
 /* ---- Строка меню: название, воздух, тонкая линия, цена ---- */
 .row{display:grid;grid-template-columns:1fr auto;gap:4px 24px;align-items:baseline;
@@ -345,10 +347,6 @@ html:has(dialog[open]){overflow:hidden}
 .dlg-cat .cat-ar{margin-top:4px;margin-bottom:8px}
 .dlg-note{margin-top:32px;font-size:14px;color:var(--cream-dim)}
 
-/* ВРЕМЕННО: показ двух вариантов оливы заказчику. Удалить после выбора. */
-.olive-sw{position:fixed;inset-block-end:16px;inset-inline-end:16px;z-index:20;font:500 13px/1 var(--fb);
-          padding:12px 16px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;box-shadow:var(--shadow)}
-
 /* ================== ПОДВАЛ (общий) ======================== */
 .foot{background:var(--olive-deep);color:var(--cream);padding-block:64px 48px}
 .foot-in{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:48px}
@@ -406,7 +404,7 @@ html:has(dialog[open]){overflow:hidden}
   <span class="wash"></span>
   <header class="hdr hdr--photo on-photo">
     <a class="brand" href="#"><b>SAVVA</b></a>
-    <nav><a href="#">Menu</a><a href="#">Atmosphere</a><a href="#">Find us</a></nav>
+    <nav><a href="#menu1">Menu</a><a href="#inside">Atmosphere</a><a href="#find1">Find us</a></nav>
     <span class="lang"><b>EN</b><i>/</i><em>عربي</em></span>
   </header>
 
@@ -417,8 +415,8 @@ html:has(dialog[open]){overflow:hidden}
         <p class="display ent" style="--d:1600ms">A day in savva<br>is what you need<br>to be savva.</p>
         <p class="lead ent" style="--d:1750ms">Specialty coffee under the olive trees. Open from half past six in the morning until two at night.</p>
         <div class="acts ent" style="--d:1900ms">
-          <a class="btn btn--primary" href="#"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
-          <a class="btn btn--secondary" href="#">View the menu<svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-chev"/></svg></a>
+          <a class="btn btn--primary" href="https://www.google.com/maps/search/?api=1&query=SAVVA+Coffee+Bir+Uthman+Madinah"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+          <a class="btn btn--secondary" href="#menu1">View the menu<svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-chev"/></svg></a>
         </div>
       </div>
     </div>
@@ -440,7 +438,7 @@ html:has(dialog[open]){overflow:hidden}
             <li>4.7 on Google Maps (729 reviews)</li>
           </ul>
         </div>
-        <div class="slot" style="--ar:4/5"><span><b>4:5</b>Интерьер: стол у окна, тёплый вечерний свет</span></div>
+        <div class="slot slot--photo" style="--ar:4/5"><img src="фото савва/place.jpg" width="960" height="1280" loading="lazy" alt="A small round table with three coffees and three plates of dessert, wooden chairs around it"></div>
       </div>
     </div>
   </section>
@@ -454,7 +452,7 @@ html:has(dialog[open]){overflow:hidden}
           <p class="lead">The bar runs the classics, from espresso to Turkish coffee, and pours Ice Drip and V60 for those who would rather wait.</p>
           <div class="lists lists--1" data-pick="Espresso|Ice Drip / V60|Turkish Coffee|Coffee of the Day (Hot / Iced)"></div>
         </div>
-        <div class="slot" style="--ar:4/5"><span><b>4:5</b>Руки бариста над V60, крупно</span></div>
+        <div class="slot slot--photo" style="--ar:4/5"><img src="фото савва/craft.jpg" width="960" height="1280" loading="lazy" alt="Espresso in a ceramic cup and a chocolate dessert on a wooden tray"></div>
       </div>
     </div>
   </section>
@@ -490,7 +488,7 @@ html:has(dialog[open]){overflow:hidden}
   <section class="sec sec--olive on-dark">
     <div class="wrap">
       <div class="eve">
-        <div class="slot slot--round"><span><b>1:1, круг</b>Десертная витрина вечером, крупно</span></div>
+        <div class="slot slot--photo slot--round"><img src="фото савва/dessert.jpg" width="1093" height="1093" loading="lazy" alt="A glazed pecan pastry on a plate, seen from above"></div>
         <div class="rv">
           <h2>Something sweet after dark.</h2>
           <p class="cat-ar" lang="ar">الحلى</p>
@@ -507,8 +505,8 @@ html:has(dialog[open]){overflow:hidden}
         <h2>Where everyone sits a little longer.</h2>
       </div>
       <div class="in-slots">
-        <div class="slot" style="--ar:4/5"><span><b>4:5</b>Стойка и чашки вечером, крупно</span></div>
-        <div class="slot" style="--ar:3/2"><span><b>3:2</b>Зал целиком: столы, свет бра, гости</span></div>
+        <div class="slot slot--photo" style="--ar:4/5"><img src="фото савва/inside-2.jpg" width="1024" height="1280" loading="lazy" alt="Curved cream armchairs and cloud-shaped white tables among bamboo plants"></div>
+        <div class="slot slot--photo" style="--ar:3/2"><img src="фото савва/inside-1.jpg" width="710" height="852" loading="lazy" style="object-position:50% 60%" alt="Cream sofas and round white tables under arched wooden windows, with tall plants"></div>
       </div>
     </div>
   </section>
@@ -596,9 +594,6 @@ html:has(dialog[open]){overflow:hidden}
     <p class="dlg-note">Prices in SAR. Calories as printed in the café.</p>
   </div>
 </dialog>
-
-<!-- ВРЕМЕННО: показ двух оттенков оливы. Удалить после выбора заказчика -->
-<button type="button" class="olive-sw" id="olive-sw">Олива: средний</button>
 
 <script>
 /* Слои света собираем скриптом, чтобы не плодить одинаковую разметку.
@@ -691,15 +686,6 @@ document.getElementById('open-menu').addEventListener('click', () => fm.showModa
 document.getElementById('close-menu').addEventListener('click', () => fm.close());
 // щелчок по затемнению вне панели закрывает её
 fm.addEventListener('click', e => { if (e.target === fm) fm.close(); });
-
-/* ---------- ВРЕМЕННО: показ двух оттенков оливы ---------- */
-const sw = document.getElementById('olive-sw');
-function setOlive(light){
-  document.documentElement.dataset.olive = light ? 'light' : 'mid';
-  sw.textContent = 'Олива: ' + (light ? 'светлый предел' : 'средний');
-}
-setOlive(new URLSearchParams(location.search).get('olive') === 'light');
-sw.addEventListener('click', () => setOlive(document.documentElement.dataset.olive !== 'light'));
 
 /* ---------- Появление при прокрутке: один приём ---------- */
 document.documentElement.classList.add('js');
