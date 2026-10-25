@@ -183,17 +183,18 @@ svg.i--s{width:15px;height:15px;stroke-width:1.92}   /* 1.6px на сетке 18
 
 /* ---------- 6. ПОЛНЫЙ КАДР ------------------------------------- */
 /* Кадр на всю высоту. Текст — компактным блоком в левом нижнем углу,
-   фасад и обе вывески остаются открытыми. Тень не растянута на пол-экрана,
-   а лежит пятном ровно под блоком: сам кадр она почти не трогает. */
+   фасад и обе вывески остаются открытыми.
+   Затемнения поверх кадра нет (решение заказчика 8 окт): тень лежит только
+   у самих букв и появляется вместе с текстом. Текст стоит на тротуаре,
+   а не на светлых окнах — читается за счёт места, а не плёнки. */
 /* тёмный фон самой секции — чтобы кремовый текст не пропал,
    если фотография почему-то не загрузится */
 #v6{position:relative;background:var(--olive-deep)}
 #v6 .facade{position:absolute;inset:0;height:100%}
-#v6 .wash{position:absolute;inset:0;z-index:2;pointer-events:none;
-  background:radial-gradient(ellipse 90% 55% at 0% 100%,
-             rgba(26,24,15,.93) 0%,rgba(26,24,15,.88) 45%,rgba(26,24,15,.78) 70%,
-             rgba(26,24,15,.45) 85%,rgba(26,24,15,.15) 95%,transparent 100%)}
-[dir=rtl] #v6 .wash{transform:scaleX(-1)}
+#v6 .col{--ts:0 1px 2px rgba(26,24,15,.6),0 0 12px rgba(26,24,15,.5),0 0 32px rgba(26,24,15,.45)}
+#v6 .over,#v6 .display,#v6 .lead,#v6 .btn{text-shadow:var(--ts)}
+/* надзаголовок мелкий и стоит ближе всех к освещённому входу — тень плотнее */
+#v6 .over{text-shadow:0 1px 2px rgba(26,24,15,.8),0 0 8px rgba(26,24,15,.65),0 0 24px rgba(26,24,15,.5)}
 #v6 .stage{position:relative;z-index:3;min-height:calc(100svh - var(--bar));
            display:flex;align-items:flex-end;padding-block:0 clamp(40px,7svh,80px)}
 #v6 .col{max-width:400px}
@@ -212,23 +213,31 @@ svg.i--s{width:15px;height:15px;stroke-width:1.92}   /* 1.6px на сетке 18
 
 @media (max-width:980px){
   .hdr nav{display:none}
-  /* на узком экране текст лежит колонкой снизу — значит и сход должен
-     идти снизу вверх, а не от левого края */
-  #v6 .wash{background:linear-gradient(to top,rgba(26,24,15,.92) 0%,rgba(26,24,15,.88) 26%,
-            rgba(26,24,15,.76) 42%,rgba(26,24,15,.4) 56%,rgba(26,24,15,.1) 68%,transparent 78%)}
   #v6 .col{max-width:none}
   /* на телефоне две кнопки в ряд не помещаются и блок растёт в два этажа.
      Вторая становится Ссылкой-стрелкой — компонент из той же системы */
   #v6 .btn--secondary{border:0;padding:14px 0}
-  [dir=rtl] #v6 .wash{transform:none}
   #v6 .lead{max-width:none}
 }
 /* вертикальный кадр (телефон стоя): фасад целиком в верхней половине,
-   текст на тротуаре. Кадр чуть крупнее и сдвинут вверх, чтобы между окнами
-   и текстом остался воздух; сход начинается ниже окон и фасад не трогает */
-#v6.tall .frame{--zoom:1.12;--fy:55%}
-#v6.tall .wash{background:linear-gradient(to top,rgba(26,24,15,.9) 0%,rgba(26,24,15,.86) 30%,
-          rgba(26,24,15,.7) 40%,rgba(26,24,15,.35) 47%,transparent 55%)}
+   текст на тротуаре. Кадр уже собран так, что фасад заполняет ширину
+   экрана, поэтому без увеличения */
+#v6.tall .frame{--fy:50%}
+/* широкий кадр (компьютер): фасад отодвинут, но тротуара в кадре мало.
+   Решение заказчика 8 окт: текст меньше и ниже, кнопки прежние — они ведут
+   к главным действиям. Кадр прижат к низу: если не влезает по высоте,
+   обрезается каменная стена сверху, а не тротуар под текстом. */
+#v6:not(.tall) .frame{--fy:100%}
+@media (min-width:981px){
+  #v6:not(.tall) .stage{padding-block-end:28px}
+  #v6:not(.tall) .col{max-width:680px}
+  #v6:not(.tall) .over{margin-bottom:6px}
+  /* две ровные строки вместо трёх: переносы <br> только для узких экранов */
+  #v6:not(.tall) .display{font-size:clamp(28px,2.1vw,34px);max-width:13em;text-wrap:balance}
+  #v6:not(.tall) .display br{display:none}
+  #v6:not(.tall) .lead{margin-top:8px;font-size:15px;max-width:none}
+  #v6:not(.tall) .acts{margin-top:16px}
+}
 @media (max-width:620px){
   .hdr{gap:16px;padding-block:14px}
 }
@@ -446,7 +455,6 @@ html.anim .sec[data-anim=words] .slot--photo.a-in img{transform:none;transition:
 
 <section class="v" id="v6">
   <div class="facade" style="--fy:46%"></div>
-  <span class="wash"></span>
   <header class="hdr hdr--photo on-photo">
     <a class="brand" href="#"><b>SAVVA</b></a>
     <nav><a href="#menu1">Menu</a><a href="#inside">Atmosphere</a><a href="#find1">Find us</a></nav>
@@ -457,7 +465,7 @@ html.anim .sec[data-anim=words] .slot--photo.a-in img{transform:none;transition:
     <div class="wrap">
       <div class="col">
         <p class="over ent" style="--d:1500ms">Bir Uthman, Medina</p>
-        <p class="display ent" style="--d:1600ms">A day in savva<br>is what you need<br>to be savva.</p>
+        <p class="display ent" style="--d:1600ms">A day in savva <br>is what you need <br>to be savva.</p>
         <p class="lead ent" style="--d:1750ms">Specialty coffee under the olive trees. Open from half past six in the morning until two at night.</p>
         <div class="acts ent" style="--d:1900ms">
           <a class="btn btn--primary" href="https://www.google.com/maps/search/?api=1&query=SAVVA+Coffee+Bir+Uthman+Madinah"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
@@ -653,7 +661,7 @@ const frame = document.createElement('div');
 frame.className = 'frame';
 facade.prepend(frame);
 function buildFacade() {
-  const [w, h] = TALL.matches ? [714, 1280] : [1280, 714];
+  const [w, h] = TALL.matches ? [572, 1024] : [1280, 714];
   const alt = 'SAVVA coffee shop facade in the evening, Bir Uthman, Madinah';
   frame.style.setProperty('--ar', w / h);
   facade.parentElement.classList.toggle('tall', TALL.matches);
