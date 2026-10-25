@@ -1,0 +1,13 @@
+# Что НЕ выкладываем на сайт: исходники, архивы, внутренние заметки, черновики.
+# На сайт идёт только index.html, папка assets и папка «фото савва».
+materials/
+*.zip
+*.md
+веер-*.html
+ui-kit.html
+serve.js
+.claude/
+.impeccable/
+# старые кадры фасада, нужны только черновикам веер-*.html
+assets/hero-off.webp
+assets/hero-light.webp
