@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SAVVA Coffee · Specialty coffee, Bir Uthman, Madinah</title>
+<title>SAVVA Coffee (demo) · Specialty coffee</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
@@ -35,7 +35,7 @@
   --fb:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
   --fad:"Noto Naskh Arabic",serif;
   --fab:"IBM Plex Sans Arabic","Segoe UI",sans-serif;
-  --bar:0px;
+  --bar:40px;   /* высота нижней плашки «Демо»: страница и первый экран оставляют ей место */
   --pad:clamp(20px,5vw,48px);  /* боковые поля: 20 моб / 48 десктоп */
 }
 *{box-sizing:border-box}
@@ -373,6 +373,20 @@ html:has(dialog[open]){overflow:hidden}
 .ico svg.i{width:20px;height:20px;stroke-width:1.44}
 .foot-base{margin-top:48px;padding-top:24px;border-top:1px solid var(--line-olive);font-size:13px;color:var(--cream-dim)}
 
+/* ПЛАШКА «ДЕМО»: всегда внизу экрана и не закрывается. Страница сделана для
+   тренировки, без договорённости с владельцем кофейни. Цвета только из палитры.
+   Текст трёх длин: телефон / ширина от 900 / ширина от 1180. */
+.demo{position:fixed;inset-inline:0;inset-block-end:0;z-index:50;height:var(--bar);
+      display:flex;align-items:center;justify-content:center;padding-inline:var(--pad);
+      background:var(--olive);color:var(--cream);border-top:1px solid var(--line-olive);
+      font-size:12px;line-height:1.3;white-space:nowrap;overflow:hidden}
+.demo b{font-weight:600}
+.demo i{font-style:normal;opacity:.55;margin-inline:6px}
+.demo .dm-m,.demo .dm-l{display:none}
+@media (min-width:900px){.demo{font-size:13px}.demo .dm-s{display:none}.demo .dm-m{display:inline}}
+@media (min-width:1180px){.demo .dm-m{display:none}.demo .dm-l{display:inline}}
+@media (max-width:340px){.demo{font-size:11px}}
+
 @media (max-width:980px){
   #b1 .place,#b1 .craft,#b1 .find,#b1 .eve,#b1 .picks{grid-template-columns:1fr;gap:32px}
   #b1 .in-slots{grid-template-columns:1fr 1fr}
@@ -451,6 +465,12 @@ html.anim .sec[data-anim=words] .slot--photo.a-in img{transform:none;transition:
   </defs>
 </svg>
 
+<aside class="demo" role="note" aria-label="Demo notice">
+  <span class="dm-s"><b>Demo</b><i>/</i>Practice project, not the real SAVVA site</span>
+  <span class="dm-m"><b>Demo version</b><i>/</i>Practice project made without the owner's involvement. Not the official SAVVA Coffee website.</span>
+  <span class="dm-l"><b>Demo version</b><i>/</i>Practice project made without the owner's involvement. Not the official SAVVA Coffee website. Contact details are placeholders.</span>
+</aside>
+
 <main>
 
 <section class="v" id="v6">
@@ -464,11 +484,11 @@ html.anim .sec[data-anim=words] .slot--photo.a-in img{transform:none;transition:
   <div class="stage">
     <div class="wrap">
       <div class="col">
-        <p class="over ent" style="--d:1500ms">Bir Uthman, Medina</p>
+        <p class="over ent" style="--d:1500ms">District, City</p>
         <p class="display ent" style="--d:1600ms">A day in savva <br>is what you need <br>to be savva.</p>
-        <p class="lead ent" style="--d:1750ms">Specialty coffee under the olive trees. Open from half past six in the morning until two at night.</p>
+        <p class="lead ent" style="--d:1750ms">Specialty coffee under the olive trees. Open from morning until late.</p>
         <div class="acts ent" style="--d:1900ms">
-          <a class="btn btn--primary" href="https://www.google.com/maps/search/?api=1&query=SAVVA+Coffee+Bir+Uthman+Madinah"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+          <a class="btn btn--primary" href="https://www.google.com/maps"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
           <a class="btn btn--secondary" href="#menu1">View the menu<svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-chev"/></svg></a>
         </div>
       </div>
@@ -486,9 +506,9 @@ html.anim .sec[data-anim=words] .slot--photo.a-in img{transform:none;transition:
           <h2>Come to sit. Stay as long as the evening does.</h2>
           <p class="lead">Most of the menu costs between 15 and 19 SAR, so staying for a second cup is an easy decision.</p>
           <ul class="facts">
-            <li>Sat to Thu 06:30 to 02:00</li>
-            <li>Fri 13:00 to 02:00</li>
-            <li>4.7 on Google Maps (729 reviews)</li>
+            <li>Sat to Thu 00:00 to 00:00</li>
+            <li>Fri 00:00 to 00:00</li>
+            <li>0.0 on Google Maps (000 reviews)</li>
           </ul>
         </div>
         <div class="slot slot--photo" style="--ar:4/5"><img src="фото савва/place.jpg" width="960" height="1280" loading="lazy" alt="A small round table with three coffees and three plates of dessert, wooden chairs around it"></div>
@@ -571,14 +591,14 @@ html.anim .sec[data-anim=words] .slot--photo.a-in img{transform:none;transition:
         <div class="rv">
           <h2>Find us</h2>
           <div class="info">
-            <address class="addr">Zubairah Al Roumiah, Bir Uthman<br>Madinah 42331, Saudi Arabia</address>
-            <p>Sat to Thu 06:30 to 02:00 / Fri 13:00 to 02:00</p>
-            <p><a class="alink" href="tel:+966564370303"><u>+966 56 437 0303</u></a></p>
-            <p class="rate"><b>4.7</b>on Google Maps / 729 reviews</p>
+            <address class="addr">Street Name 00, District<br>City 00000, Saudi Arabia</address>
+            <p>Sat to Thu 00:00 to 00:00 / Fri 00:00 to 00:00</p>
+            <p><a class="alink" href="tel:+9660000000"><u>+966 00 000 0000</u></a></p>
+            <p class="rate"><b>0.0</b>on Google Maps / 000 reviews</p>
           </div>
           <div class="acts cta">
-            <a class="btn btn--primary" href="https://www.google.com/maps/search/?api=1&query=SAVVA+Coffee+Bir+Uthman+Madinah"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
-            <a class="alink" href="https://wa.me/966564370303"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-chat"/></svg><u>Message on WhatsApp</u></a>
+            <a class="btn btn--primary" href="https://www.google.com/maps"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-pin"/></svg>Get directions</a>
+            <a class="alink" href="https://wa.me/9660000000"><svg viewBox="0 0 18 18" class="i i--s"><use href="#ic-chat"/></svg><u>Message on WhatsApp</u></a>
           </div>
         </div>
         <div class="slot" style="--ar:4/3"><span><b>4:3</b>Карта: Google Maps, метка SAVVA, в палитре страницы</span></div>
@@ -595,25 +615,25 @@ html.anim .sec[data-anim=words] .slot--photo.a-in img{transform:none;transition:
     <div class="foot-in">
       <div>
         <a class="brand" href="#"><b>SAVVA</b></a>
-        <p class="tag">Specialty coffee, Bir Uthman, Medina.</p>
+        <p class="tag">Specialty coffee, District, City.</p>
         <div class="ico-row">
-          <a class="ico" href="https://instagram.com/savva_cafe" aria-label="Instagram @savva_cafe"><svg viewBox="0 0 18 18" class="i"><use href="#ic-insta"/></svg></a>
-          <a class="ico" href="https://wa.me/966564370303" aria-label="WhatsApp"><svg viewBox="0 0 18 18" class="i"><use href="#ic-chat"/></svg></a>
-          <a class="ico" href="tel:+966564370303" aria-label="Call +966 56 437 0303"><svg viewBox="0 0 18 18" class="i"><use href="#ic-phone"/></svg></a>
-          <a class="ico" href="https://www.google.com/maps/search/?api=1&query=SAVVA+Coffee+Bir+Uthman+Madinah" aria-label="Directions"><svg viewBox="0 0 18 18" class="i"><use href="#ic-pin"/></svg></a>
+          <a class="ico" href="https://instagram.com/" aria-label="Instagram @your_cafe"><svg viewBox="0 0 18 18" class="i"><use href="#ic-insta"/></svg></a>
+          <a class="ico" href="https://wa.me/9660000000" aria-label="WhatsApp"><svg viewBox="0 0 18 18" class="i"><use href="#ic-chat"/></svg></a>
+          <a class="ico" href="tel:+9660000000" aria-label="Call +966 00 000 0000"><svg viewBox="0 0 18 18" class="i"><use href="#ic-phone"/></svg></a>
+          <a class="ico" href="https://www.google.com/maps" aria-label="Directions"><svg viewBox="0 0 18 18" class="i"><use href="#ic-pin"/></svg></a>
         </div>
       </div>
       <div class="col">
         <h3>Visit</h3>
-        <address>Zubairah Al Roumiah, Bir Uthman<br>Madinah 42331, Saudi Arabia</address>
+        <address>Street Name 00, District<br>City 00000, Saudi Arabia</address>
       </div>
       <div class="col">
         <h3>Hours</h3>
-        <p>Sat to Thu 06:30 to 02:00<br>Fri 13:00 to 02:00</p>
-        <p style="margin-top:12px"><a href="tel:+966564370303">+966 56 437 0303</a></p>
+        <p>Sat to Thu 00:00 to 00:00<br>Fri 00:00 to 00:00</p>
+        <p style="margin-top:12px"><a href="tel:+9660000000">+966 00 000 0000</a></p>
       </div>
     </div>
-    <p class="foot-base">© 2026 SAVVA Coffee / @savva_cafe</p>
+    <p class="foot-base">© 2026 SAVVA Coffee (demo) / @your_cafe</p>
   </div>
 </footer>
 
@@ -662,7 +682,7 @@ frame.className = 'frame';
 facade.prepend(frame);
 function buildFacade() {
   const [w, h] = TALL.matches ? [572, 1024] : [1280, 714];
-  const alt = 'SAVVA coffee shop facade in the evening, Bir Uthman, Madinah';
+  const alt = 'SAVVA coffee shop facade in the evening';
   frame.style.setProperty('--ar', w / h);
   facade.parentElement.classList.toggle('tall', TALL.matches);
   // при «уменьшить движение» сразу горящий кадр, без тёмного и без масок
